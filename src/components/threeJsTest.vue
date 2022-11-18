@@ -96,7 +96,7 @@ export default {
                             //     // UniformsLib.fog, 
                                 {
                                     _mainColor: { value: new THREE.Vector3(1.0, 1.0, 1.0) },
-                                    lightPosition: { value: new THREE.Vector3(-50, 60, 15) },
+                                    lightPosition: { value: new THREE.Vector3(165.8, 35, 89) },
                                     tilling: { value: new THREE.Vector2(1, 1) },
                                     _MainTex: { value: mainTexture },
                                     _CompMaskTex: { value: compMaskTex },
@@ -270,7 +270,7 @@ export default {
             light = new THREE.SpotLight(0xffffff);
             // light.position.set(0, 1.25, 1.25);
             // light.position.set(0, -110, 20);
-            light.position.set(-50, 60, 15);
+            light.position.set(165.8, 35, 89);
 
             //告诉点光需要开启阴影投射
             light.castShadow = true;
