@@ -178,9 +178,9 @@ void main(){
   //最终颜色
   vec3 finalColor=vec3(1.0,1.0,1.0);
   vec3 shadowColor=vec3(0,0,0);
-  float shadowPower=.5;
+  float shadowPower=.2;
   // ------------------------------
-  finalColor=mix(finalColor,shadowColor,(1.-getShadowMask())*.2);
+  finalColor=mix(finalColor,shadowColor,(1.-getShadowMask())*shadowPower);
   // it just mixes the shadow color with the frag color
   gl_FragColor=vec4(finalColor.x*lambert,finalColor.x*lambert,finalColor.x*lambert,1.);
       

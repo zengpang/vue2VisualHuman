@@ -42,7 +42,7 @@ let modelPath = 'static/model/Naria.FBX';
 //模型材质
 let modelMat = null;
 //shader路径
-let shaderPath = 'static/shader/Shadow';
+let shaderPath = 'static/shader/ChacterBodyShader';
 //shader
 let fragShaderStr = null;
 let vertexShaderStr = null;
@@ -64,9 +64,73 @@ export default {
             xhr.send(null);
             return xhr.status === okStatus ? xhr.responseText : null;
         },
+        loadTexture() {
+            return new Promise(() => {
+                console.log("加载中");
+                var isLoading = true;
+                var mainTexture = new TGALoader().load("static/texture/Naria/Naria_D_3.tga",(texture)=>{
+                    texture.wrapS=THREE.RepeatWrapping;
+                    texture.wrapT=THREE.RepeatWrapping;
+                    texture.repeat.set( 4, 4 );
+                   
+                });
+               
+                var compMaskTex = new TGALoader().load("static/texture/Naria/Naria_MCS.tga");
+                var normalTex = new TGALoader().load("static/texture/Naria/Naria_N.tga");
+                const path = 'static/texture/Naria/pisa/';
+                const format = '.png';
+                const urls = [
+                    path + 'px' + format, path + 'nx' + format,
+                    path + 'py' + format, path + 'ny' + format,
+                    path + 'pz' + format, path + 'nz' + format
+                ];
+                while (isLoading) {
+                    if (mainTexture != null && compMaskTex != null && normalTex != null) {
+                    
+                        
+                        isLoading = false;
+                        modelMat = new THREE.ShaderMaterial({
+                            uniforms:
+                            //  mergeUniforms([
+                            //     UniformsLib.lights,
+                            //     // UniformsLib.fog, 
+                                {
+                                    _mainColor: { value: new THREE.Vector3(1.0, 1.0, 1.0) },
+                                    lightPosition: { value: new THREE.Vector3(-50, 60, 15) },
+                                    tilling: { value: new THREE.Vector2(1, 1) },
+                                    _MainTex: { value: mainTexture },
+                                    _CompMaskTex: { value: compMaskTex },
+                                    _NormalTex: { value: normalTex },
+                                    _sssTexture: { value: new THREE.TextureLoader().load("static/texture/Naria/preintegrated_falloff_2D.png") },
+                                    _speculaColor: { value: new THREE.Vector4(1.0, 1.0, 1.0, 1.0) },
+                                    _specularPow: { value: 83 },
+                                    _roughnessAdj: { value: -0.126 },
+                                    _metalAdj: { value: 0.241 },
+                                    _shadowInit: { value: 0.2 },
+                                    _sssVOffset: { value: 0.703 },
+                                    _sssUOffset: { value: 0.646 },
+                                    _skinLightValue: { value: 0.831 },
+                                    _skinSpecValue: { value: 0.2 },
+                                     _Expose:{value:1.8},
+                                     _cubeMap:{value:new THREE.CubeTextureLoader().load(urls)}
 
+                                },
+                            // ]),
+
+                            //236,65,65
+                            vertexShader: vertexShaderStr,
+                            fragmentShader: fragShaderStr,
+                            // lights: true,
+                            // dithering: true,
+
+                        });
+                    }
+                }
+                console.log("加载结束");
+            });
+        },
         //材质初始化
-        initMat() {
+        async initMat() {
             //获取原生shader代码
             let fragStr = THREE.ShaderLib["shadow"].fragmentShader;
             let VertStr = THREE.ShaderLib["shadow"].vertexShader;
@@ -75,8 +139,79 @@ export default {
             // console.log(THREE.ShaderLib["shadow"].uniforms);
             fragShaderStr = this.load(shaderPath + `.frag`);
             vertexShaderStr = this.load(shaderPath + `.vert`);
+ 
+            modelMat = new THREE.MeshLambertMaterial();
+            await this.loadTexture();
+            //  mainTexture = new TGALoader().load("static/texture/Naria/Naria_D_3.tga", function (mainTexture) {
+            //     modelMat = new THREE.ShaderMaterial({
+            //         uniforms: mergeUniforms([
+            //             UniformsLib.lights,
+            //             // UniformsLib.fog, 
+            //             {
+            //                 _mainColor: { value: new THREE.Vector3(1.0, 1.0, 1.0) },
+            //                 lightPosition: { value: new THREE.Vector3(-50, 60, 15) },
+            //                 tilling: { value: new THREE.Vector2(1, 1) },
+            //                 _MainTex: { value: mainTexture },
+            //                 // _CompMaskTex: {value: new TGALoader().load("static/texture/Naria/Naria_MCS.tga")},
+            //                 _NormalTex: { value: new TGALoader().load("static/texture/Naria/Naria_N.tga") },
+            //                 //_sssTexture:{value: new THREE.TextureLoader().load("static/texture/Naria/preintegrated_falloff_2D.png")},
+            //                 _speculaColor:{value:new THREE.Vector4(1.0,1.0,1.0,1.0)},
+            //                 _specularPow:{value:35},
+            //                 _roughnessAdj: { value: 0.263 },
+            //                 _metalAdj: { value: -0.1},
+            //                 _shadowInit: { value: 0.2 },
+            //                 _sssVOffset: { value: 0.5 },
+            //                 _sssUOffset: { value: 0.4 },
+            //                 _skinLightValue: { value: 1 },
+            //                 _skinSpecValue: { value: 0.1 },
+
+
+            //             }
+            //         ]),
+
+            //         //236,65,65
+            //         vertexShader: vertexShaderStr,
+            //         fragmentShader: fragShaderStr,
+            //         lights: true,
+            //         dithering: true,
+
+            //     });
+            // });
+
+
+            // while(isLoading)
+            // {
+
+            // }
+
             // modelMat = new THREE.ShaderMaterial({
+
             //     uniforms: {
+
+            //         _mainColor: { value: new THREE.Vector3(1.0, 1.0, 1.0) },
+            //         lightPosition: { value: new THREE.Vector3(0, -10, 0) },
+            //         tilling: { value: new THREE.Vector2(1, 1) },
+            //         _MainTex:{value: mainTexture},
+            //         _NormalTex: { value: new TGALoader().load("static/texture/Naria/Naria_N.tga") },
+            //         _roughness: { value: 1.0 },
+            //         _roughnessContrast: { value: 1.06 },
+            //         _roughnessInit: { value: 1.92 },
+            //         _roughnessMin: { value: 0.0 },
+            //         _roughnessMax: { value: 0.7 }
+            //     },
+            //     //236,65,65
+            //           vertexShader: vertexShaderStr,
+            //           fragmentShader: fragShaderStr,
+            //         //   lights: true,
+            // //     dithering: true,
+
+
+            // });
+            // modelMat = new THREE.ShaderMaterial({
+            //     uniforms: mergeUniforms([
+            //         UniformsLib.lights,
+            //         // UniformsLib.fog, 
+            //         {
             //         _mainColor: { value: new THREE.Vector3(1.0, 1.0, 1.0) },
             //         lightPosition: { value: new THREE.Vector3(0, -10, 0) },
             //         tilling: { value: new THREE.Vector2(1, 1) },
@@ -87,50 +222,18 @@ export default {
             //         _roughnessInit: { value: 1.92 },
             //         _roughnessMin: { value: 0.0 },
             //         _roughnessMax: { value: 0.7 }
-            //     },
+            //         }
+            //     ]),
+
             //     //236,65,65
             //     vertexShader: vertexShaderStr,
             //     fragmentShader: fragShaderStr,
+            //     lights: true,
+            //     dithering: true,
+
 
 
             // });
-            modelMat = new THREE.ShaderMaterial({
-                uniforms: mergeUniforms([
-                    UniformsLib.lights,
-                    // UniformsLib.fog, 
-                    {
-                        _mainColor: { value: new THREE.Vector3(1.0, 1.0, 1.0) },
-                        lightPosition: { value: new THREE.Vector3(0, -10, 0) },
-                        tilling: { value: new THREE.Vector2(1, 1) },
-                        _NormalTex: { value: new TGALoader("static/texture/Naria/Naria_N.tga") },
-                        _roughness: { value: 1.0 },
-                        _roughnessContrast: { value: 1.06 },
-                        _roughnessInit: { value: 1.92 },
-                        _roughnessMin: { value: 0.0 },
-                        _roughnessMax: { value: 0.7 }
-                    }
-                ]),
-                // uniforms: {
-                //     _mainColor: { value: new THREE.Vector3(1.0, 1.0, 1.0) },
-                //     //  _MainTex:{value: new THREE.TextureLoader().load("static/texture/Naria/Naria_D_3.tga")},
-                //     lightPosition: { value: new THREE.Vector3(-50, 60, 15) },
-                //     tilling: { value: new THREE.Vector2(1, 1) },
-                //     _NormalTex: { value: new TGALoader("static/texture/Naria/Naria_N.tga") },
-                //     _roughness: { value: 1.0 },
-                //     _roughnessContrast: { value: 1.06 },
-                //     _roughnessInit: { value: 1.92 },
-                //     _roughnessMin: { value: 0.0 },
-                //     _roughnessMax: { value: 0.7 }
-                // },
-                //236,65,65
-                vertexShader: vertexShaderStr,
-                fragmentShader: fragShaderStr,
-                lights: true,
-                dithering: true,
-
-
-
-            });
 
             // // 阴影shader
             // modelMat = new THREE.ShaderMaterial({
@@ -205,11 +308,14 @@ export default {
                 //     color: 0xFFFFFF,
                 //     wireframe: false
                 // });
+                var headerMat=new THREE.MeshBasicMaterial({
+                    color:0xFFFFFF
+                });
                 console.log(object);
                 showModel = object;
                 showModel.position.set(0, -30, 0);
                 // geometry.center(); //居中显示
-                showModel.children[1].material = mat;
+                showModel.children[1].material[0] = mat;
 
                 // showModel.children[1].material=mat;
                 //开启阴影
@@ -325,11 +431,11 @@ export default {
         draw() {
             this.initScene();
 
-            this.initMat();  
+            this.initMat();
             this.initCamera();
             this.initRender();
             this.initLight();
-           
+
             this.initPlane();
             this.initModelFbx();
             this.initControls();

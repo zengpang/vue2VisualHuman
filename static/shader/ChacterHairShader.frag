@@ -13,14 +13,35 @@ uniform vec3 _mainColor;
 //贴图
 uniform sampler2D _MainTex;
 uniform sampler2D _NormalTex;
-uniform sampler2D _CompMaskTex;
-uniform sampler2D _sssTexture;
 uniform samplerCube _cubeMap;
 
 //高光
-uniform float _specularPow;
-uniform vec4 _speculaColor;
 uniform vec4 _LightColor0;
+uniform float _shadowInit;
+
+//头发高光1
+uniform vec4 _HairColor;
+uniform sampler2D _AnsionMap;
+uniform vec4 _AnsionMap_ST;
+uniform vec4 _speculaColor1;
+uniform float _specShininess1;
+uniform float _specNoise1;
+uniform float _specOffset1;
+
+//头发高光2
+uniform vec4 _speculaColor2;
+uniform float _specShininess2;
+uniform float _specNoise2;
+uniform float _specOffset2;
+uniform float _specularPow;
+
+//粗糙度
+uniform float _roughnessAdj;
+uniform float _metalAdj;
+
+//环境贴图
+uniform vec4 _cubeMap_HDR;
+uniform float _Expose;
 
 //球谐因子计算
 uniform vec4 customSHAr;
@@ -30,27 +51,6 @@ uniform vec4 customSHBr;
 uniform vec4 customSHBg;
 uniform vec4 customSHBb;
 uniform vec4 customSHC;
-
-//环境贴图
-uniform vec4 _cubeMap_HDR;
-uniform float _Expose;
-
-//粗糙度
-uniform float _roughnessAdj;
-uniform float _metalAdj;
-uniform float _shadowInit;
-
-//SSS皮肤效果
-uniform float _sssVOffset;
-uniform float _sssUOffset;
-uniform float _skinLightValue;
-uniform float _skinSpecValue;
-uniform vec2 tilling;
-
-varying vec3 objectPos;
-varying vec3 vNormal;
-varying vec2 vUv;
-
 vec3 customSH(vec3 normalDir)
 {
     vec4 customSHAr=vec4(-.1838,.6302,-.2304,.6344);
@@ -148,7 +148,6 @@ void main(){
     
     vec3 vDir=normalize(cameraPosition-worldPosition);
     vec3 nDir=ComputeNormal(worldNormal,vDir,vUv*tilling,_NormalTex);
-    //nDir=worldNormal;
     vec3 lDir=normalize(lightPosition-worldPosition);
     //向量操作
     vec3 hDir=normalize(lDir+vDir);
@@ -169,19 +168,13 @@ void main(){
     vec3 shadowColor=vec3(0.0,0.0,0.0);
     float shadowPower=.2;
     float atten=mix(shadowColorFactor,shadowColor,(1.0-getShadowMask())*shadowPower).x;
-    atten=1.0;
+    
     /*直接光漫反射*/
     float diffuseColor=1.0;
     float lambert=max(0.0,NdotL);
     diffuseColor=(lambert+1.0)*0.5;
     vec3 diffuseCommon=diffuseColor*baseColor*vec3(atten,atten,atten);
-    /*SSS*/
-    float skinarea=1.0-compMaskTex.a;
-    vec2 uvlut=vec2(lambert+_sssUOffset,_sssVOffset);
-    vec3 lutcolorGamma=texture2D(_sssTexture,uvlut).xyz;
-    vec3 lutcolor=pow(lutcolorGamma,vec3(2.2,2.2,2.2));
-    vec3 sssDiffuse=lutcolor*baseColor*atten;
-    vec3 directDiffuse=lerp(diffuseCommon,sssDiffuse,skinarea);
+    
     /*高光*/
     float roughness=saturate(compMaskTex.r+_roughnessAdj);
     vec3 specterm=vec3(1.,1.,1.);
@@ -196,17 +189,30 @@ void main(){
     specfinalColor=saturate(specfinalColor);
     /*环境色*/
     vec3 envDiffuse=customSH(nDir)*directDiffuse;
-    envDiffuse=lerp(envDiffuse*vec3(0.5,0.5,0.5),envDiffuse*vec3(1,1,1),skinarea);
-    /*间接光镜面反射*/
-                roughness=roughness*(1.7-0.7*roughness);
-                float mip_level=roughness*6.0;
-                vec4 cubeMapColor=textureCube(_cubeMap,rvDir,mip_level);
-                vec3 envColor=cubeMapColor.xyz;
-                vec3 envspecular=envColor*specularColor*diffuseColor*_Expose;
+    envDiffuse=lerp(envDiffuse*vec3(.5,.5,.5),envDiffuse*vec3(1,1,1),skinarea);
+    //直接光镜面反射
+    vec2 anisonUV=i.uv*_AnsionMap_ST.xy+_AnsionMap_ST.zw;
+    float anisoNoise=tex2D(_AnsionMap,anisonUV).r-.5;
+    float anisonAtten=saturate(sqrt(max(0.,halfLambert/ndotV)))*atten;
+    //头发高光1
+    vec3 specColor1=_speculaColor1.rgb+baseColor;
+    vec3 anisoOffset1=nDir*(anisoNoise*_specNoise1+_specOffset1);
+    vec3 btDir1=normalize(btDir+anisoOffset1);
+    float bdotH1=dot(hDir,btDir1)/_specShininess1;
+    vec3 specTerm1=exp(-(tdotH*tdotH+bdotH1*bdotH1)/(1.+ndotH));
+    vec3 finalSpec1=specTerm1*anisonAtten*specColor1*_LightColor0.xyz;
+    
+    //头发高光2
+    vec3 specColor2=_speculaColor2.rgb+baseColor;
+    vec3 anisoOffset2=nDir*(anisoNoise*_specNoise2+_specOffset2);
+    vec3 btDir2=normalize(btDir+anisoOffset2);
+    float bdotH2=dot(hDir,btDir2)/_specShininess2;
+    vec3 specTerm2=exp(-(tdotH*tdotH+bdotH2*bdotH2)/(1.+ndotH));
+    vec3 finalSpec2=specTerm2*anisonAtten*specColor2*_LightColor0.xyz;
+    vec3 finalSpec=finalSpec1+finalSpec2;
    
     //最终颜色
-    // vec3 finalColor=(diffuseCommon*_mainColor);
-    vec3 finalColor=directDiffuse+specfinalColor+envDiffuse*_skinLightValue+envspecular;
+    vec3 finalColor=(diffuseCommon*_mainColor);
     finalColor=ACETompping(finalColor);
     //vec4 finalShadow=vec4(vec3(0.0, 0.0, 0.0), 1.0 * (1.0-  getShadowMask() ) );
     vec3 finalColor_gamma=pow(finalColor,vec3(1./2.2,1./2.2,1./2.2));
