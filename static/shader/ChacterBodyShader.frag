@@ -5,6 +5,7 @@
 #include <lights_pars_begin>
 #include <shadowmap_pars_fragment>
 #include <shadowmask_pars_fragment>
+ #include <dithering_pars_fragment>
 uniform mat4 modelMatrix;
 uniform vec3 color;
 uniform vec3 lightPosition;
@@ -148,6 +149,10 @@ void main(){
     vec3 albedoColor=pow(mainTex,vec3(2.2,2.2,2.2));
     float metal=saturate(compMaskTex.g+_metalAdj);
     vec3 baseColor= albedoColor.xyz*(1.0-metal);
+    /*阴影*/
+    vec3 shadowColorFactor=vec3(1.0,1.0,1.0);
+    vec3 shadowColor=vec3(0.0,0.0,0.0);
+    float atten
     /*直接光漫反射*/
     float diffuseColor=1.0;
     float lambert=max(0.0,NdotL);
@@ -182,7 +187,8 @@ void main(){
     finalColor=ACETompping(finalColor);
     vec4 finalShadow=vec4(vec3(0.0, 0.0, 0.0), 1.0 * (1.0-  getShadowMask() ) );
     vec3 finalColor_gamma=pow(finalColor,vec3(1./2.2,1./2.2,1./2.2));
-    // gl_FragColor = vec4(lambert,lambert,lambert,lambert);
+   
     gl_FragColor=finalShadow;
+    #include <dithering_fragment>
 	
 }

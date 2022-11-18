@@ -176,13 +176,13 @@ void main(){
   //custom_SHC: (-0.1901, -0.1900, -0.1897, 1.0000)
   
   //最终颜色
-  vec3 finalColor=vec3(lambert,lambert,lambert);
+  vec3 finalColor=vec3(1.0,1.0,1.0);
   vec3 shadowColor=vec3(0,0,0);
   float shadowPower=.5;
   // ------------------------------
-  
+  finalColor=mix(finalColor,shadowColor,(1.-getShadowMask())*.2);
   // it just mixes the shadow color with the frag color
-  gl_FragColor=vec4(mix(finalColor,shadowColor,(1.-getShadowMask())*.2),1.);
+  gl_FragColor=vec4(finalColor.x*lambert,finalColor.x*lambert,finalColor.x*lambert,1.);
       
       #include <dithering_fragment>
 	
