@@ -169,7 +169,7 @@ void main(){
     vec3 shadowColor=vec3(0.0,0.0,0.0);
     float shadowPower=.2;
     float atten=mix(shadowColorFactor,shadowColor,(1.0-getShadowMask())*shadowPower).x;
-    atten=1.0;
+    //atten=1.0;
     /*直接光漫反射*/
     float diffuseColor=1.0;
     float lambert=max(0.0,NdotL);
@@ -198,19 +198,19 @@ void main(){
     vec3 envDiffuse=customSH(nDir)*directDiffuse;
     envDiffuse=lerp(envDiffuse*vec3(0.5,0.5,0.5),envDiffuse*vec3(1,1,1),skinarea);
     /*间接光镜面反射*/
-                roughness=roughness*(1.7-0.7*roughness);
-                float mip_level=roughness*6.0;
-                vec4 cubeMapColor=textureCube(_cubeMap,rvDir,mip_level);
-                vec3 envColor=cubeMapColor.xyz;
-                vec3 envspecular=envColor*specularColor*diffuseColor*_Expose;
-   
+    roughness=roughness*(1.7-.7*roughness);
+    float mip_level=roughness*6.;
+    vec4 cubeMapColor=textureCube(_cubeMap,rvDir,mip_level);
+    vec3 envColor=cubeMapColor.xyz;
+    vec3 envspecular=envColor*specularColor*diffuseColor*_Expose;
+    
     //最终颜色
     // vec3 finalColor=(diffuseCommon*_mainColor);
     vec3 finalColor=directDiffuse+specfinalColor+envDiffuse*_skinLightValue+envspecular;
     finalColor=ACETompping(finalColor);
     //vec4 finalShadow=vec4(vec3(0.0, 0.0, 0.0), 1.0 * (1.0-  getShadowMask() ) );
     vec3 finalColor_gamma=pow(finalColor,vec3(1./2.2,1./2.2,1./2.2));
-    gl_FragColor=vec4(finalColor_gamma,1.0);
+    gl_FragColor=vec4(finalColor_gamma,1.);
     #include <dithering_fragment>
 	
 }
