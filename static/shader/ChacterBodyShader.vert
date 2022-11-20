@@ -8,6 +8,7 @@ varying vec3 vNormal;
 varying vec2 vUv;
 varying vec3 objectPos;
 varying vec4 worldPosition;
+
 void main() {
 	#include <beginnormal_vertex>
 	#include <morphnormal_vertex>
@@ -24,4 +25,5 @@ void main() {
 	vNormal=normal;
     vUv = uv;
     objectPos= position;
+	
 }

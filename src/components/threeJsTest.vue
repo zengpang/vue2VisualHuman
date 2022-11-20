@@ -21,7 +21,6 @@ import { UniformsLib } from 'three/src/renderers/shaders/UniformsLib.js'
 const $ = s => document.querySelector(s);
 //展示模型
 let showModel = null;
-let showModelBone = null;
 //摄像头
 let camera = null;
 //场景
@@ -40,13 +39,19 @@ let controls = null;
 //模型路径
 let modelPath = 'static/model/Naria.FBX';
 //模型材质
-let modelMat = null;
+let bodyMat = null;//身体材质
+let headerMat=null;//头部材质
+//贴图资源路径
+let texturePath="static/texture/Naria/";
 //shader路径
 let shaderPath = 'static/shader/ChacterBodyShader';
+let hairShader='static/shader/ChacterHairShader';
 //shader
 let fragShaderStr = null;
 let vertexShaderStr = null;
 
+let fragHairShaderStr = null;
+let vertexHairShaderStr = null;
 export default {
     name: 'threeJsTest',
     data() {
@@ -64,21 +69,22 @@ export default {
             xhr.send(null);
             return xhr.status === okStatus ? xhr.responseText : null;
         },
+        //读取贴图
         loadTexture() {
             return new Promise(() => {
                 console.log("加载中");
-                var isLoading = true;
-                var mainTexture = new TGALoader().load("static/texture/Naria/Naria_D_3.tga", (texture) => {
+                let isLoading = true;
+                let mainTexture = new TGALoader().load(`${texturePath}Naria_D_3.tga`, (texture) => {
                     texture.wrapS = THREE.RepeatWrapping;
                     texture.wrapT = THREE.RepeatWrapping;
                     texture.repeat.set(4, 4);
 
                 });
-
-                var compMaskTex = new TGALoader().load("static/texture/Naria/Naria_MCS.tga");
-                var normalTex = new TGALoader().load("static/texture/Naria/Naria_N.tga");
-                var sssTex = new THREE.TextureLoader().load("static/texture/Naria/preintegrated_falloff_2D.png");
-
+                //"static/texture/Naria/Naria_MCS.tga"
+                let compMaskTex = new TGALoader().load(`${texturePath}Naria_MCS.tga`);
+                let normalTex = new TGALoader().load(`${texturePath}Naria_N.tga`);
+                let sssTex = new THREE.TextureLoader().load(`${texturePath}preintegrated_falloff_2D.png`);
+                let hairSpecMap=new TGALoader().load(`${texturePath}_ShiftTexture01.tga`);  
                 const path = 'static/texture/Naria/pisa/';
                 const format = '.png';
                 const urls = [
@@ -86,7 +92,7 @@ export default {
                     path + 'py' + format, path + 'ny' + format,
                     path + 'pz' + format, path + 'nz' + format
                 ];
-                var cubeTex = new THREE.CubeTextureLoader().load(urls);
+                let cubeTex = new THREE.CubeTextureLoader().load(urls);
                 while (isLoading) {
                     if (mainTexture != null && compMaskTex != null && normalTex != null && sssTex != null && cubeTex != null) {
 
@@ -123,7 +129,7 @@ export default {
                         //     fragmentShader: fragShaderStr,
                         // });
 
-                        modelMat = new THREE.ShaderMaterial({
+                        bodyMat = new THREE.ShaderMaterial({
                             uniforms:
                                 mergeUniforms([
                                     UniformsLib.lights,
@@ -144,7 +150,7 @@ export default {
                                         _sssUOffset: { value: 0.646 },
                                         _skinLightValue: { value: 0.831 },
                                         _skinSpecValue: { value: 0.2 },
-                                        _Expose: { value: 1.8 },
+                                        _Expose: { value: 1.5 },
                                         _cubeMap: { value: null }
                                     },
                                 ]),
@@ -156,17 +162,70 @@ export default {
                             dithering: true,
 
                         });
+
                         //允许材质更新
-                        modelMat.uniformsNeedUpdate = true;
-                        modelMat.needsUpdate = true;
+                        bodyMat.uniformsNeedUpdate = true;
+                        bodyMat.needsUpdate = true;
 
                         //在这里更新材质贴图，避免出现贴图错误
-                        modelMat.uniforms._MainTex.value = mainTexture;
-                        modelMat.uniforms._CompMaskTex.value = compMaskTex;
-                        modelMat.uniforms._NormalTex.value = normalTex;
-                        modelMat.uniforms._sssTexture.value = sssTex;
-                        modelMat.uniforms._cubeMap.value = cubeTex;
-                        modelMat.dithering = true;
+                        bodyMat.uniforms._MainTex.value = mainTexture;
+                        bodyMat.uniforms._CompMaskTex.value = compMaskTex;
+                        bodyMat.uniforms._NormalTex.value = normalTex;
+                        bodyMat.uniforms._sssTexture.value = sssTex;
+                        bodyMat.uniforms._cubeMap.value = cubeTex;
+                        // bodyMat.dithering = true;
+
+                        headerMat= new THREE.ShaderMaterial({
+                            uniforms:
+                                mergeUniforms([
+                                    UniformsLib.lights,
+                                    {
+                                        
+                                        lightPosition: { value: new THREE.Vector3(165.8, 35, 89) },
+                                        tilling: { value: new THREE.Vector2(1, 1) },
+                                        _MainTex: { value: null },
+                                        _NormalTex: { value: null },
+                                        _specularPow: { value: 3 },
+                                        _roughnessAdj: { value: 0.23 },
+                                        _metalAdj: { value: -0.033 },
+                                        
+                                        _HairColor: { value: new THREE.Vector3(0.0, 0.0,0.0,1.0) },
+                                        _AnsionMap:{value:null},
+                                        _AnsionMap_ST:{value:new THREE.Vector4(1.0, 1.0, 0.0, 0.0)},
+
+                                        _speculaColor1: { value: new THREE.Vector4(0.01568628, 0.01568628, 0.01568628, 1.0) },
+                                        _specShininess1:{value:0.2},
+                                        _specNoise1:{value:1},
+                                        _specOffset1:{value:0},
+
+                                        _speculaColor2: { value: new THREE.Vector4(0.01568628, 0.01568628, 0.01568628, 1.0) },
+                                        _specShininess2:{value:0.071},
+                                        _specNoise2:{value:0.5},
+                                        _specOffset2:{value:0},
+                                     
+                                      
+                                        _shadowInit: { value: 0.2 },
+                                        _Expose: { value: 0.3 },
+                                        _cubeMap: { value: null }
+                                    },
+                                ]),
+
+                            //236,65,65
+                            vertexShader: vertexHairShaderStr,
+                            fragmentShader: fragHairShaderStr,
+                            lights: true,
+                            dithering: true,
+
+                        });
+                        
+                        //允许材质更新
+                        headerMat.uniformsNeedUpdate = true;
+                        headerMat.needsUpdate = true;
+
+                        //在这里更新材质贴图，避免出现贴图错误
+                        headerMat.uniforms._AnsionMap.value = hairSpecMap;
+                        headerMat.uniforms._cubeMap.value = cubeTex;
+
                     }
                 }
                 console.log("加载结束");
@@ -175,15 +234,16 @@ export default {
         //材质初始化
         async initMat() {
             //获取原生shader代码
-            let fragStr = THREE.ShaderLib["shadow"].fragmentShader;
-            let VertStr = THREE.ShaderLib["shadow"].vertexShader;
+            let fragStr = THREE.ShaderLib["phong"].fragmentShader;
+            let VertStr = THREE.ShaderLib["phong"].vertexShader;
             console.log(fragStr);
             console.log(VertStr);
             // console.log(THREE.ShaderLib["shadow"].uniforms);
             fragShaderStr = this.load(shaderPath + `.frag`);
             vertexShaderStr = this.load(shaderPath + `.vert`);
-
-            modelMat = new THREE.MeshLambertMaterial();
+            fragHairShaderStr = this.load(hairShader + `.frag`);
+            vertexHairShaderStr = this.load(hairShader + `.vert`); 
+            bodyMat = new THREE.MeshLambertMaterial();
 
             await this.loadTexture();
         },
@@ -204,7 +264,7 @@ export default {
         },
         //初始化灯光
         initLight() {
-            // scene.add(new THREE.AmbientLight(0x444444));
+            scene.add(new THREE.AmbientLight(0x444444));
             light = new THREE.SpotLight(0xffffff);
             // light.position.set(0, 1.25, 1.25);
             // light.position.set(0, -110, 20);
@@ -216,10 +276,10 @@ export default {
             light.shadow.mapSize.width = 2048; //阴影贴图宽度设置为1024像素
             light.shadow.mapSize.height = 2048; //阴影贴图高度设置为1024像素
             scene.add(light);
-            //             var shadowCameraHelper = new THREE.CameraHelper(light.shadow.camera);
-            // shadowCameraHelper.visible = true;
+                        var shadowCameraHelper = new THREE.CameraHelper(light.shadow.camera);
+            shadowCameraHelper.visible = true;
             // let Ambient = new THREE.AmbientLight(0x404040, 2);
-            // scene.add(Ambient);
+             scene.add(shadowCameraHelper);
         },
         initPlane() {
             var planeGeo = new THREE.PlaneGeometry(100, 100, 10, 10);//创建平面
@@ -240,21 +300,16 @@ export default {
             let loader = new FBXLoader();
 
             loader.load(modelPath, function (object) {
-                //创建纹理
-                var mat = modelMat;
-                //     var mat=new THREE.MeshLambertMaterial({  //创建材料
-                //     color: 0xFFFFFF,
-                //     wireframe: false
-                // });
-                var headerMat = new THREE.MeshBasicMaterial({
-                    color: 0xFFFFFF
-                });
+                //模型身体材质
+                let bodymat = bodyMat;
+                //模型头发材质
+                let headermat = headerMat;
                 console.log(object);
                 showModel = object;
                 showModel.position.set(0, -30, 0);
                 // geometry.center(); //居中显示
-                showModel.children[1].material[0] = mat;
-
+                showModel.children[1].material[0] = bodymat;
+                showModel.children[1].material[1] = headermat;
                 // showModel.children[1].material=mat;
                 //开启阴影
                 showModel.traverse(function (child) {
@@ -350,20 +405,11 @@ export default {
         animate() {
             //更新
             requestAnimationFrame(this.animate);
-
             if (animationMixers.length > 0) {
-
-
                 //遍历并更新所有动画混合器
                 animationMixers[0].update(clock.getDelta());
-
-
-
             }
-
             this.render();
-
-
         },
         //绘制
         draw() {

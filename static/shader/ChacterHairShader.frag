@@ -7,6 +7,9 @@
 #include <shadowmask_pars_fragment>
    #include <dithering_pars_fragment>
 uniform mat4 modelMatrix;
+uniform mat4 modelViewMatrix;//从模型空间转世界空间坐标系
+uniform mat4 projectionMatrix;
+uniform mat3 normalMatrix;
 uniform vec3 color;
 uniform vec3 lightPosition;
 uniform vec3 _mainColor;
@@ -43,42 +46,16 @@ uniform float _metalAdj;
 uniform vec4 _cubeMap_HDR;
 uniform float _Expose;
 
-//球谐因子计算
-uniform vec4 customSHAr;
-uniform vec4 customSHAg;
-uniform vec4 customSHAb;
-uniform vec4 customSHBr;
-uniform vec4 customSHBg;
-uniform vec4 customSHBb;
-uniform vec4 customSHC;
-vec3 customSH(vec3 normalDir)
-{
-    vec4 customSHAr=vec4(-.1838,.6302,-.2304,.6344);
-    vec4 customSHAg=vec4(-.1837,.6300,-.2303,.6352);
-    vec4 customSHAb=vec4(-.1837,.6299,-.2300,.6377);
-    vec4 customSHBr=vec4(-.2174,-.2547,-.1851,.1640);
-    vec4 customSHBg=vec4(-.2173,-.2546,-.1850,.1639);
-    vec4 customSHBb=vec4(-.2171,-.2543,-.1847,.1637);
-    vec4 customSHC=vec4(-.1901,-.1900,-.1897,1.);
-    vec4 normalForSH=vec4(normalDir,1.);
-    vec3 x;
-    x.r=dot(customSHAr,normalForSH);
-    x.g=dot(customSHAg,normalForSH);
-    x.b=dot(customSHAb,normalForSH);
-    
-    vec3 x1,x2;
-    vec4 vB=normalForSH.xyzz*normalForSH.yzzx;
-    x1.r=dot(customSHBr,vB);
-    x1.g=dot(customSHBg,vB);
-    x1.b=dot(customSHBb,vB);
-    
-    float vC=normalForSH.x*normalForSH.x-normalForSH.y*normalForSH.y;
-    x2=customSHC.rgb*vC;
-    
-    vec3 sh=max(vec3(0.,0.,0.),(x+x1+x2));
-    sh=pow(sh,vec3(1./2.2,1./2.2,1./2.2));
-    return sh;
-}
+
+
+uniform vec2 tilling;
+varying vec3 objectPos;
+varying vec3 vNormal;
+varying vec3 worldPos;
+
+
+varying vec2 vUv;
+
 vec3 ACETompping(vec3 x)
 {
     float a=2.51;
@@ -112,7 +89,22 @@ vec3 lerp(vec3 a,float b,float w)
     return a+vec3(w,w,w)*(vec3(b-a.x,b-a.y,b-a.z));
     
 }
-mat3 cotangent_frame(vec3 N,vec3 p,vec2 uv)
+// vec3 getbitTangent(vec3 N,vec3 p,vec2 uv)
+// {
+//      vec3 dp1=dFdx(p);
+//     vec3 dp2=dFdy(p);
+//     vec2 duv1=dFdx(uv);
+//     vec2 duv2=dFdy(uv);
+    
+    
+//     vec3 dp2perp=cross(dp2,N);
+//     vec3 dp1perp=cross(N,dp1);
+//     vec3 T=dp2perp*duv1.x+dp1perp*duv2.x;
+//     vec3 B=dp2perp*duv1.y+dp1perp*duv2.y;
+//     float invmax=inversesqrt(max(dot(T,T),dot(B,B)));
+    
+// }
+mat3 cotangent_frame(vec3 N,vec3 p,vec2 uv,out vec3 btDir,out vec3 tDir)
 {
    
     vec3 dp1=dFdx(p);
@@ -126,96 +118,110 @@ mat3 cotangent_frame(vec3 N,vec3 p,vec2 uv)
     vec3 T=dp2perp*duv1.x+dp1perp*duv2.x;
     vec3 B=dp2perp*duv1.y+dp1perp*duv2.y;
     
-   
+    
     float invmax=inversesqrt(max(dot(T,T),dot(B,B)));
+    btDir=normalize(B*invmax);
+    tDir=normalize(T*invmax);
     return mat3(T*invmax,B*invmax,N);
 }
-vec3 ComputeNormal(vec3 nornal,vec3 viewDir,vec2 uv,sampler2D normalMap)
+vec3 ComputeNormal(vec3 nornal,vec3 viewDir,vec2 uv,sampler2D normalMap,out vec3 btDir,out vec3 tDir)
 {
  
     vec3 map=texture2D(normalMap,uv).xyz;
     
     map=map*255./127.-128./127.;
     
-    mat3 TBN=cotangent_frame(nornal,-viewDir,uv);
+    mat3 TBN=cotangent_frame(nornal,-viewDir,uv,btDir,tDir);
     return normalize(TBN*map);
-    return(texture2D(normalMap,vUv).rgb-.5)*2.;
+    // return(texture2D(normalMap,vUv).rgb-.5)*2.;
 }
 void main(){
-    
-    vec3 worldNormal=normalize(vec3(modelMatrix*vec4(vNormal,0.)));
-    vec3 worldPosition=(modelMatrix*vec4(objectPos,1.)).xyz;//获取世界坐标
-    
+      vec3 worldNormal=normalize(vec3(modelViewMatrix*vec4(vNormal,0.)));
+  //  vec3 worldNormal=normalize(normalMatrix*vNormal);
+    vec3 worldPosition=(modelViewMatrix*vec4(objectPos,1.)).xyz;
+
     vec3 vDir=normalize(cameraPosition-worldPosition);
-    vec3 nDir=ComputeNormal(worldNormal,vDir,vUv*tilling,_NormalTex);
+    vec3 btDir=vec3(1.0,1.0,1.0);
+    vec3 tDir=vec3(1.0,1.0,1.0);
+    vec3 nDir=ComputeNormal(worldNormal,vDir,vUv*tilling,_NormalTex,btDir,tDir);
+    nDir=worldNormal;
+    nDir=normalize(nDir);
     vec3 lDir=normalize(lightPosition-worldPosition);
     //向量操作
     vec3 hDir=normalize(lDir+vDir);
     vec3 rLDir=normalize(reflect(-lDir,nDir));
     vec3 rvDir=reflect(-vDir,nDir);
+
     float NdotV=dot(nDir,vDir);
     float NdotL=dot(nDir,lDir);
     float rLdotv=dot(rLDir,nDir);
+    float TdotH=dot(tDir,hDir);
+    float NdotH= dot(nDir,hDir);
+   
     //贴图操作
     vec3 mainTex=texture2D(_MainTex,vUv).xyz;
-    vec4 compMaskTex=texture2D(_CompMaskTex,vUv);
+   
     /*基础颜色*/
     vec3 albedoColor=pow(mainTex,vec3(2.2,2.2,2.2));
-    float metal=saturate(compMaskTex.g+_metalAdj);
-    vec3 baseColor= albedoColor.xyz*(1.0-metal);
+    vec3 baseColor= albedoColor.xyz;
+    vec3 directDiffuse=baseColor;
     /*阴影*/
     vec3 shadowColorFactor=vec3(1.0,1.0,1.0);
     vec3 shadowColor=vec3(0.0,0.0,0.0);
-    float shadowPower=.2;
+    float shadowPower=_shadowInit;
     float atten=mix(shadowColorFactor,shadowColor,(1.0-getShadowMask())*shadowPower).x;
-    
+    //漫反射
+    float lambert=max(0.0,NdotL);//兰伯特漫反射模型
+    float halfLambert=(lambert+1.0)*0.5;//这里的halfLambert非正确半兰伯特，而是经验漫反射模型
     /*直接光漫反射*/
     float diffuseColor=1.0;
-    float lambert=max(0.0,NdotL);
-    diffuseColor=(lambert+1.0)*0.5;
+    
+    diffuseColor=halfLambert;
     vec3 diffuseCommon=diffuseColor*baseColor*vec3(atten,atten,atten);
     
-    /*高光*/
-    float roughness=saturate(compMaskTex.r+_roughnessAdj);
-    vec3 specterm=vec3(1.,1.,1.);
-    vec3 specularColor=lerp(.04,albedoColor.rgb,metal);
-    float smoothness=1.-roughness;
-    float shininess=lerp(1.,_specularPow,smoothness);
-    float specularPow=shininess*smoothness;
-    vec3 phone=vec3(pow(max(0.,rLdotv),specularPow),pow(max(0.,rLdotv),specularPow),pow(max(0.,rLdotv),specularPow));
-    specterm=phone;
-    vec3 skinspecColor=lerp(specularColor,_skinSpecValue,skinarea);
-    vec3 specfinalColor=specterm*skinspecColor*vec3(atten,atten,atten)*_speculaColor.xyz;
-    specfinalColor=saturate(specfinalColor);
-    /*环境色*/
-    vec3 envDiffuse=customSH(nDir)*directDiffuse;
-    envDiffuse=lerp(envDiffuse*vec3(.5,.5,.5),envDiffuse*vec3(1,1,1),skinarea);
+   
+    
     //直接光镜面反射
-    vec2 anisonUV=i.uv*_AnsionMap_ST.xy+_AnsionMap_ST.zw;
-    float anisoNoise=tex2D(_AnsionMap,anisonUV).r-.5;
-    float anisonAtten=saturate(sqrt(max(0.,halfLambert/ndotV)))*atten;
+    vec2 anisonUV=vUv*_AnsionMap_ST.xy+_AnsionMap_ST.zw;
+    float anisoNoise=texture2D(_AnsionMap,anisonUV).r-.5;
+    float anisonAtten=saturate(sqrt(max(0.,halfLambert/NdotV)));
+   
     //头发高光1
     vec3 specColor1=_speculaColor1.rgb+baseColor;
     vec3 anisoOffset1=nDir*(anisoNoise*_specNoise1+_specOffset1);
     vec3 btDir1=normalize(btDir+anisoOffset1);
     float bdotH1=dot(hDir,btDir1)/_specShininess1;
-    vec3 specTerm1=exp(-(tdotH*tdotH+bdotH1*bdotH1)/(1.+ndotH));
-    vec3 finalSpec1=specTerm1*anisonAtten*specColor1*_LightColor0.xyz;
+    float specTerm1_float=exp(-(TdotH*TdotH+bdotH1*bdotH1)/(1.+NdotH));
+    vec3 specTerm1=vec3(specTerm1_float,specTerm1_float,specTerm1_float);
+    vec3 finalSpec1=specTerm1*anisonAtten*specColor1;
     
     //头发高光2
     vec3 specColor2=_speculaColor2.rgb+baseColor;
     vec3 anisoOffset2=nDir*(anisoNoise*_specNoise2+_specOffset2);
     vec3 btDir2=normalize(btDir+anisoOffset2);
     float bdotH2=dot(hDir,btDir2)/_specShininess2;
-    vec3 specTerm2=exp(-(tdotH*tdotH+bdotH2*bdotH2)/(1.+ndotH));
-    vec3 finalSpec2=specTerm2*anisonAtten*specColor2*_LightColor0.xyz;
+    float specTerm2_float=exp(-(TdotH*TdotH+bdotH2*bdotH2)/(1.+NdotH));
+    vec3 specTerm2=vec3(specTerm2_float,specTerm2_float,specTerm2_float);
+    vec3 finalSpec2=specTerm2*anisonAtten*specColor2;
+
     vec3 finalSpec=finalSpec1+finalSpec2;
-   
+    
+    float metal=saturate(_metalAdj);
+    float roughness=_roughnessAdj;
+    vec3 specularColor=lerp(.04,baseColor.rgb,metal);
+    roughness=roughness*(1.7-.7*roughness);
+    float mip_level=roughness*6.;
+    vec4 cubeMapColor=textureCube(_cubeMap,rvDir,mip_level);
+    vec3 envColor=cubeMapColor.xyz;
+    //envColor=vec3(0.1686, 0.149, 0.149);
+    vec3 envspecular=envColor*halfLambert*anisoNoise*_Expose;
     //最终颜色
-    vec3 finalColor=(diffuseCommon*_mainColor);
+    vec3 finalColor=diffuseCommon+finalSpec+envspecular;
+    //finalColor=worldPosition;
     finalColor=ACETompping(finalColor);
     //vec4 finalShadow=vec4(vec3(0.0, 0.0, 0.0), 1.0 * (1.0-  getShadowMask() ) );
     vec3 finalColor_gamma=pow(finalColor,vec3(1./2.2,1./2.2,1./2.2));
+
     gl_FragColor=vec4(finalColor_gamma,1.0);
     #include <dithering_fragment>
 	

@@ -7,6 +7,8 @@
 #include <shadowmask_pars_fragment>
    #include <dithering_pars_fragment>
 uniform mat4 modelMatrix;
+uniform mat4 modelViewMatrix;//从模型空间转世界空间坐标系
+uniform mat3 normalMatrix;
 uniform vec3 color;
 uniform vec3 lightPosition;
 uniform vec3 _mainColor;
@@ -139,12 +141,13 @@ vec3 ComputeNormal(vec3 nornal,vec3 viewDir,vec2 uv,sampler2D normalMap)
     
     mat3 TBN=cotangent_frame(nornal,-viewDir,uv);
     return normalize(TBN*map);
-    return(texture2D(normalMap,vUv).rgb-.5)*2.;
+   // return(texture2D(normalMap,vUv).rgb-.5)*2.;
 }
 void main(){
     
-    vec3 worldNormal=normalize(vec3(modelMatrix*vec4(vNormal,0.)));
-    vec3 worldPosition=(modelMatrix*vec4(objectPos,1.)).xyz;//获取世界坐标
+     vec3 worldNormal=normalize(vec3(modelViewMatrix*vec4(vNormal,0.)));
+    //vec3 worldNormal=normalize(normalMatrix*vNormal);
+    vec3 worldPosition=(modelViewMatrix*vec4(objectPos,1.)).xyz;//获取世界坐标
     
     vec3 vDir=normalize(cameraPosition-worldPosition);
     vec3 nDir=ComputeNormal(worldNormal,vDir,vUv*tilling,_NormalTex);
@@ -167,7 +170,7 @@ void main(){
     /*阴影*/
     vec3 shadowColorFactor=vec3(1.0,1.0,1.0);
     vec3 shadowColor=vec3(0.0,0.0,0.0);
-    float shadowPower=.2;
+    float shadowPower=_shadowInit;
     float atten=mix(shadowColorFactor,shadowColor,(1.0-getShadowMask())*shadowPower).x;
     //atten=1.0;
     /*直接光漫反射*/
@@ -206,6 +209,7 @@ void main(){
     
     //最终颜色
     // vec3 finalColor=(diffuseCommon*_mainColor);
+    //最终颜色=直接光漫反射+高光+IBL+间接光镜面反射
     vec3 finalColor=directDiffuse+specfinalColor+envDiffuse*_skinLightValue+envspecular;
     finalColor=ACETompping(finalColor);
     //vec4 finalShadow=vec4(vec3(0.0, 0.0, 0.0), 1.0 * (1.0-  getShadowMask() ) );
