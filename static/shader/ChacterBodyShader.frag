@@ -157,11 +157,11 @@ void main(){
     //向量操作
     vec3 hDir=normalize(lDir+vDir);
     vec3 rLDir=normalize(reflect(-lDir,nDir));
-    vec3 rvDir=reflect(-vDir,nDir);
+    vec3 rvDir=normalize(reflect(-vDir,nDir));
     float NdotV=dot(nDir,vDir);
     float NdotL=dot(nDir,lDir);
     float rLdotv=dot(rLDir,vDir);
-  
+    float NdotH=dot(nDir,hDir);
     //贴图操作
     vec3 mainTex=texture2D(_MainTex,vUv).xyz;
     vec4 compMaskTex=texture2D(_CompMaskTex,vUv);
@@ -195,6 +195,7 @@ void main(){
     float shininess=lerp(1.,_specularPow,smoothness);
     float specularPow=shininess*smoothness;
     vec3 phone=vec3(pow(max(0.,rLdotv),specularPow),pow(max(0.,rLdotv),specularPow),pow(max(0.,rLdotv),specularPow));
+    //vec3 bilnphone=vec3(pow(max(0.,NdotH),specularPow),pow(max(0.,NdotH),specularPow),pow(max(0.,NdotH),specularPow));
     specterm=phone;
     vec3 skinspecColor=lerp(specularColor,_skinSpecValue,skinarea);
     vec3 specfinalColor=specterm*skinspecColor*vec3(atten,atten,atten)*_speculaColor.xyz;
