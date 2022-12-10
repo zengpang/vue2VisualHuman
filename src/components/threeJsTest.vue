@@ -150,7 +150,7 @@ export default {
                                         _sssVOffset: { value: 0.703 },
                                         _sssUOffset: { value: 0.646 },
                                         _skinLightValue: { value: 0.831 },
-                                        _skinSpecValue: { value: 0.12 },
+                                        _skinSpecValue: { value: 0.15 },
                                         _Expose: { value: 1.5 },
                                         _cubeMap: { value: null }
                                     },
