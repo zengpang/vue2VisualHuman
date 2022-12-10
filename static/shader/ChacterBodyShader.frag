@@ -145,11 +145,12 @@ vec3 ComputeNormal(vec3 nornal,vec3 viewDir,vec2 uv,sampler2D normalMap)
 }
 void main(){
     
-     vec3 worldNormal=normalize(vec3(modelViewMatrix*vec4(vNormal,0.)));
-    //vec3 worldNormal=normalize(normalMatrix*vNormal);
-    vec3 worldPosition=(modelViewMatrix*vec4(objectPos,1.)).xyz;//获取世界坐标
+     //vec3 worldNormal=normalize(vec3(modelMatrix*vec4(vNormal,0.)));
+    vec3 worldNormal=normalize(normalMatrix*vNormal);//视图空间下的
+    vec3 worldPosition=(viewMatrix*modelMatrix*vec4(objectPos,1.)).xyz;//获取世界坐标
     
-    vec3 vDir=normalize(cameraPosition-worldPosition);
+     vec3 vDir=normalize(vec3(-7.951022465039643, 50.66599857875026, 84.02389415272548)-worldPosition);
+    //vec3 vDir=normalize(cameraPosition*normalMatrix-worldPosition);
     vec3 nDir=ComputeNormal(worldNormal,vDir,vUv*tilling,_NormalTex);
     //nDir=worldNormal;
     vec3 lDir=normalize(lightPosition-worldPosition);
@@ -159,7 +160,8 @@ void main(){
     vec3 rvDir=reflect(-vDir,nDir);
     float NdotV=dot(nDir,vDir);
     float NdotL=dot(nDir,lDir);
-    float rLdotv=dot(rLDir,nDir);
+    float rLdotv=dot(rLDir,vDir);
+  
     //贴图操作
     vec3 mainTex=texture2D(_MainTex,vUv).xyz;
     vec4 compMaskTex=texture2D(_CompMaskTex,vUv);
@@ -211,6 +213,7 @@ void main(){
     // vec3 finalColor=(diffuseCommon*_mainColor);
     //最终颜色=直接光漫反射+高光+IBL+间接光镜面反射
     vec3 finalColor=directDiffuse+specfinalColor+envDiffuse*_skinLightValue+envspecular;
+   
     finalColor=ACETompping(finalColor);
     //vec4 finalShadow=vec4(vec3(0.0, 0.0, 0.0), 1.0 * (1.0-  getShadowMask() ) );
     vec3 finalColor_gamma=pow(finalColor,vec3(1./2.2,1./2.2,1./2.2));

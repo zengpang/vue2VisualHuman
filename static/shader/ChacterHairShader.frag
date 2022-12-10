@@ -89,6 +89,7 @@ vec3 lerp(vec3 a,float b,float w)
     return a+vec3(w,w,w)*(vec3(b-a.x,b-a.y,b-a.z));
     
 }
+
 // vec3 getbitTangent(vec3 N,vec3 p,vec2 uv)
 // {
 //      vec3 dp1=dFdx(p);
@@ -136,11 +137,14 @@ vec3 ComputeNormal(vec3 nornal,vec3 viewDir,vec2 uv,sampler2D normalMap,out vec3
     // return(texture2D(normalMap,vUv).rgb-.5)*2.;
 }
 void main(){
-      vec3 worldNormal=normalize(vec3(modelViewMatrix*vec4(vNormal,0.)));
-  //  vec3 worldNormal=normalize(normalMatrix*vNormal);
-    vec3 worldPosition=(modelViewMatrix*vec4(objectPos,1.)).xyz;
-
-    vec3 vDir=normalize(cameraPosition-worldPosition);
+     // vec3 worldNormal=normalize(vec3(modelViewMatrix*vec4(vNormal,0.)));
+    
+    vec3 worldNormal=normalize(normalMatrix*vNormal);
+    vec3 worldPosition=(viewMatrix*modelMatrix*vec4(objectPos,1.)).xyz;
+  
+  
+    //vec3(-7.951022465039643, 50.66599857875026, 84.02389415272548)
+    vec3 vDir=normalize(vec3(-7.951022465039643, 50.66599857875026, 84.02389415272548)-worldPosition);
     vec3 btDir=vec3(1.0,1.0,1.0);
     vec3 tDir=vec3(1.0,1.0,1.0);
     vec3 nDir=ComputeNormal(worldNormal,vDir,vUv*tilling,_NormalTex,btDir,tDir);
@@ -154,7 +158,7 @@ void main(){
 
     float NdotV=dot(nDir,vDir);
     float NdotL=dot(nDir,lDir);
-    float rLdotv=dot(rLDir,nDir);
+    float rLdotv=dot(rLDir,vDir);
     float TdotH=dot(tDir,hDir);
     float NdotH= dot(nDir,hDir);
    

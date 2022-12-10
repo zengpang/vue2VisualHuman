@@ -32,6 +32,7 @@ let clock = new THREE.Clock();
 let animationPath = 'static/model/Naria@idie.FBX';
 //灯光
 let light = null;
+let lightWorldPos=new THREE.Vector4(0.0,0.0,0.0);
 //渲染器
 let render = null;
 //用户交互插件
@@ -135,7 +136,7 @@ export default {
                                     UniformsLib.lights,
                                     {
                                         _mainColor: { value: new THREE.Vector3(1.0, 1.0, 1.0) },
-                                        lightPosition: { value: new THREE.Vector3(165.8, 35, 89) },
+                                        lightPosition: { value: new THREE.Vector3(165.8, 35.6, 80.6) },
                                         tilling: { value: new THREE.Vector2(1, 1) },
                                         _MainTex: { value: null },
                                         _CompMaskTex: { value: null },
@@ -149,7 +150,7 @@ export default {
                                         _sssVOffset: { value: 0.703 },
                                         _sssUOffset: { value: 0.646 },
                                         _skinLightValue: { value: 0.831 },
-                                        _skinSpecValue: { value: 0.2 },
+                                        _skinSpecValue: { value: 0.12 },
                                         _Expose: { value: 1.5 },
                                         _cubeMap: { value: null }
                                     },
@@ -181,7 +182,7 @@ export default {
                                     UniformsLib.lights,
                                     {
                                         
-                                        lightPosition: { value: new THREE.Vector3(165.8, 35, 89) },
+                                        lightPosition: { value: new THREE.Vector3(165.8, 35.6, 80.6) },
                                         tilling: { value: new THREE.Vector2(1, 1) },
                                         _MainTex: { value: null },
                                         _NormalTex: { value: null },
@@ -268,20 +269,28 @@ export default {
             light = new THREE.SpotLight(0xffffff);
             // light.position.set(0, 1.25, 1.25);
             // light.position.set(0, -110, 20);
-            light.position.set(165.8, 35, 89);
-
+            light.matrixWorldAutoUpdate =true;
+            light.position.set(165.8, 35.6, 80.6);
+            lightWorldPos=light.position;
+           
+            console.log(lightWorldPos);
             //告诉点光需要开启阴影投射
             light.castShadow = true;
             light.shadow.bias = -0.000005;
             light.shadow.mapSize.width = 2048; //阴影贴图宽度设置为1024像素
             light.shadow.mapSize.height = 2048; //阴影贴图高度设置为1024像素
+            var ligntCameraHelper = new THREE.SpotLightHelper(light,20);
+            ligntCameraHelper.visible = true;
+    // let Ambient = new THREE.AmbientLight(0x404040, 2);
+           scene.add(ligntCameraHelper);
             scene.add(light);
-                        var shadowCameraHelper = new THREE.CameraHelper(light.shadow.camera);
-            shadowCameraHelper.visible = true;
+            var shadowCameraHelper = new THREE.CameraHelper(light.shadow.camera);
+            shadowCameraHelper.visible = false;
             // let Ambient = new THREE.AmbientLight(0x404040, 2);
              scene.add(shadowCameraHelper);
         },
         initPlane() {
+            console.log("绘制平面");
             var planeGeo = new THREE.PlaneGeometry(100, 100, 10, 10);//创建平面
             var planeMat = new THREE.MeshLambertMaterial({  //创建材料
                 color: 0xFFFFFF,
@@ -390,8 +399,8 @@ export default {
 
         render() {
             render.render(scene, camera);
-
-
+            
+ 
         },
 
         //窗口变动触发的函数
