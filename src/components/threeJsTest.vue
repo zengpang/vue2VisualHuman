@@ -136,7 +136,7 @@ export default {
                                     UniformsLib.lights,
                                     {
                                         _mainColor: { value: new THREE.Vector3(1.0, 1.0, 1.0) },
-                                        lightPosition: { value: new THREE.Vector3(165.8, 35.6, 80.6) },
+                                        lightPosition: { value: new THREE.Vector3(200, 80, 200) },
                                         tilling: { value: new THREE.Vector2(1, 1) },
                                         _MainTex: { value: null },
                                         _CompMaskTex: { value: null },
@@ -182,7 +182,7 @@ export default {
                                     UniformsLib.lights,
                                     {
                                         
-                                        lightPosition: { value: new THREE.Vector3(165.8, 35.6, 80.6) },
+                                        lightPosition: { value: new THREE.Vector3(200, 80, 200) },
                                         tilling: { value: new THREE.Vector2(1, 1) },
                                         _MainTex: { value: null },
                                         _NormalTex: { value: null },
@@ -270,7 +270,7 @@ export default {
             // light.position.set(0, 1.25, 1.25);
             // light.position.set(0, -110, 20);
             light.matrixWorldAutoUpdate =true;
-            light.position.set(165.8, 35.6, 80.6);
+            light.position.set(200, 80, 200);
             lightWorldPos=light.position;
            
             console.log(lightWorldPos);
