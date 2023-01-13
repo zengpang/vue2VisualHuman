@@ -260,9 +260,7 @@ export default{
 
         initModelFbx() {
             console.log('模型加载');
-
             let loader = new FBXLoader();
-
             loader.load(modelPath, function (object) {
                 //模型身体材质
                 let bodymat = bodyMat;
@@ -277,12 +275,9 @@ export default{
                 // showModel.children[1].material=mat;
                 //开启阴影
                 showModel.traverse(function (child) {
-
                     if (child.isMesh) {
-
                         child.castShadow = true;
                         child.receiveShadow = true;
-
                     }
 
                 });
@@ -335,7 +330,6 @@ export default{
             let loader = new FBXLoader();
 
             loader.load(animationPath, function (object) {
-
                 //创建动画混合器，并指定模型，混合器会自动根据指定模型寻找骨骼，并绑定
                 let mixer = new THREE.AnimationMixer(showModel);
                 //添加至动画混合器数组
@@ -346,16 +340,11 @@ export default{
                 let action = mixer.clipAction(showModel.animations[0]);
                 //播放动画片
                 action.play();
-
-
-
             });
         },
 
         render() {
             render.render(scene, camera);
-            
- 
         },
 
         //窗口变动触发的函数
@@ -378,12 +367,10 @@ export default{
         //绘制
         draw() {
             this.initScene();
-
             this.initMat();
             this.initCamera();
             this.initRender();
             this.initLight();
-
             this.initPlane();
             this.initModelFbx();
             this.initControls();
