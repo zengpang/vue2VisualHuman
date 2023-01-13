@@ -1,14 +1,14 @@
 <template>
-    <ThreeJsShow >
+    <threeJsShow >
 
-    </ThreeJsShow>
+    </threeJsShow>
 </template>
 <style scoped>
 
 </style>
 <script>
 
-import ThreeJsShow from '../components/threeJsShow.vue';
+import threeJsShow from '../components/threeJsShow.vue';
 
 export default  {
     name: 'mainPage',
@@ -18,7 +18,7 @@ export default  {
         };
     },
     components:{
-        ThreeJsShow
+        threeJsShow
     },
     methods: {
  
