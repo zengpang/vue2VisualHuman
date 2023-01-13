@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <threeJsTest/>
+    <mainPage></mainPage>
   </div>
 </template>
 
 <script>
-import threeJsTest from './components/threeJsTest'
+import mainPage from './views/mainPage'
 
 export default {
   name: 'App',
   components: {
-    threeJsTest
+    mainPage
   }
 }
 </script>

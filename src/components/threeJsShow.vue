@@ -1,7 +1,7 @@
 <template>
-    <div id="container">
+<div id="container" >
 
-    </div>
+</div>
 </template>
 <style scoped>
 #container {
@@ -12,11 +12,11 @@
 <script>
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { TGALoader } from "three/examples/jsm/loaders/TGALoader";
 import { mergeUniforms } from 'three/src/renderers/shaders/UniformsUtils.js'
 import { UniformsLib } from 'three/src/renderers/shaders/UniformsLib.js'
+import {loadFile} from '../lib/loadFile'
 
 const $ = s => document.querySelector(s);
 //展示模型
@@ -29,7 +29,7 @@ let scene = null;
 let animationMixers = [];
 let clock = new THREE.Clock();
 //动画文件路径
-let animationPath = 'static/model/Naria@idie.FBX';
+const animationPath = 'static/model/Naria@idie.FBX';
 //灯光
 let light = null;
 let lightWorldPos=new THREE.Vector4(0.0,0.0,0.0);
@@ -38,54 +38,43 @@ let render = null;
 //用户交互插件
 let controls = null;
 //模型路径
-let modelPath = 'static/model/Naria.FBX';
+const modelPath = 'static/model/Naria.FBX';
 //模型材质
 let bodyMat = null;//身体材质
 let headerMat=null;//头部材质
 //贴图资源路径
-let texturePath="static/texture/Naria/";
+const texturePath="static/texture/Naria/";
 //shader路径
-let shaderPath = 'static/shader/ChacterBodyShader';
-let hairShader='static/shader/ChacterHairShader';
+const shaderPath = 'static/shader/ChacterBodyShader';
+const hairShader='static/shader/ChacterHairShader';
 //shader
 let fragShaderStr = null;
 let vertexShaderStr = null;
-
 let fragHairShaderStr = null;
 let vertexHairShaderStr = null;
-export default {
-    name: 'threeJsTest',
+export default{
+    name:'threeJsShow',
     data() {
         return {
-
+          
         };
     },
-    methods: {
-        //本地文件读取
-        load(name) {
-            let xhr = new XMLHttpRequest(),
-                okStatus = document.location.protocol === "file:" ? 0 : 200;
-            xhr.open('GET', name, false);
-            xhr.overrideMimeType("text/html;charset=utf-8");//默认为utf-8
-            xhr.send(null);
-            return xhr.status === okStatus ? xhr.responseText : null;
-        },
+    methods: { 
         //读取贴图
         loadTexture() {
             return new Promise(() => {
                 console.log("加载中");
                 let isLoading = true;
-                let mainTexture = new TGALoader().load(`${texturePath}Naria_D_3.tga`, (texture) => {
+                const mainTexture = new TGALoader().load(`${texturePath}Naria_D_3.tga`, (texture) => {
                     texture.wrapS = THREE.RepeatWrapping;
                     texture.wrapT = THREE.RepeatWrapping;
                     texture.repeat.set(4, 4);
-
                 });
                 //"static/texture/Naria/Naria_MCS.tga"
-                let compMaskTex = new TGALoader().load(`${texturePath}Naria_MCS.tga`);
-                let normalTex = new TGALoader().load(`${texturePath}Naria_N.tga`);
-                let sssTex = new THREE.TextureLoader().load(`${texturePath}preintegrated_falloff_2D.png`);
-                let hairSpecMap=new TGALoader().load(`${texturePath}_ShiftTexture01.tga`);  
+                const compMaskTex = new TGALoader().load(`${texturePath}Naria_MCS.tga`);
+                const normalTex = new TGALoader().load(`${texturePath}Naria_N.tga`);
+                const sssTex = new THREE.TextureLoader().load(`${texturePath}preintegrated_falloff_2D.png`);
+                const hairSpecMap=new TGALoader().load(`${texturePath}_ShiftTexture01.tga`);  
                 const path = 'static/texture/Naria/pisa/';
                 const format = '.png';
                 const urls = [
@@ -96,40 +85,7 @@ export default {
                 let cubeTex = new THREE.CubeTextureLoader().load(urls);
                 while (isLoading) {
                     if (mainTexture != null && compMaskTex != null && normalTex != null && sssTex != null && cubeTex != null) {
-
-
                         isLoading = false;
-                        /**
-                         原初版本材质初始化，无自阴影
-                         */
-                        // modelMat = new THREE.ShaderMaterial({
-                        //     uniforms:
-
-                        //         {
-                        //             _mainColor: { value: new THREE.Vector3(1.0, 1.0, 1.0) },
-                        //             lightPosition: { value: new THREE.Vector3(165.8, 35, 89) },
-                        //             tilling: { value: new THREE.Vector2(1, 1) },
-                        //             _MainTex: { value: mainTexture },
-                        //             _CompMaskTex: { value: compMaskTex },
-                        //             _NormalTex: { value: normalTex },
-                        //             _sssTexture: { value: new THREE.TextureLoader().load("static/texture/Naria/preintegrated_falloff_2D.png") },
-                        //             _speculaColor: { value: new THREE.Vector4(1.0, 1.0, 1.0, 1.0) },
-                        //             _specularPow: { value: 83 },
-                        //             _roughnessAdj: { value: -0.126 },
-                        //             _metalAdj: { value: 0.241 },
-                        //             _shadowInit: { value: 0.2 },
-                        //             _sssVOffset: { value: 0.703 },
-                        //             _sssUOffset: { value: 0.646 },
-                        //             _skinLightValue: { value: 0.831 },
-                        //             _skinSpecValue: { value: 0.2 },
-                        //              _Expose:{value:1.8},
-                        //              _cubeMap:{value:new THREE.CubeTextureLoader().load(urls)}
-                        //         },
-                        //     // ]),
-                        //     vertexShader: vertexShaderStr,
-                        //     fragmentShader: fragShaderStr,
-                        // });
-
                         bodyMat = new THREE.ShaderMaterial({
                             uniforms:
                                 mergeUniforms([
@@ -202,9 +158,7 @@ export default {
                                         _speculaColor2: { value: new THREE.Vector4(0.01568628, 0.01568628, 0.01568628, 1.0) },
                                         _specShininess2:{value:0.071},
                                         _specNoise2:{value:0.5},
-                                        _specOffset2:{value:0},
-                                     
-                                      
+                                        _specOffset2:{value:0},                                     
                                         _shadowInit: { value: 0.2 },
                                         _Expose: { value: 0.3 },
                                         _cubeMap: { value: null }
@@ -230,20 +184,21 @@ export default {
                     }
                 }
                 console.log("加载结束");
+              
             });
         },
         //材质初始化
         async initMat() {
             //获取原生shader代码
-            let fragStr = THREE.ShaderLib["phong"].fragmentShader;
-            let VertStr = THREE.ShaderLib["phong"].vertexShader;
-            console.log(fragStr);
-            console.log(VertStr);
+            // let fragStr = THREE.ShaderLib["phong"].fragmentShader;
+            // let VertStr = THREE.ShaderLib["phong"].vertexShader;
+            // console.log(fragStr);
+            // console.log(VertStr);
             // console.log(THREE.ShaderLib["shadow"].uniforms);
-            fragShaderStr = this.load(shaderPath + `.frag`);
-            vertexShaderStr = this.load(shaderPath + `.vert`);
-            fragHairShaderStr = this.load(hairShader + `.frag`);
-            vertexHairShaderStr = this.load(hairShader + `.vert`); 
+            fragShaderStr = loadFile(shaderPath + `.frag`);
+            vertexShaderStr = loadFile(shaderPath + `.vert`);
+            fragHairShaderStr = loadFile(hairShader + `.frag`);
+            vertexHairShaderStr = loadFile(hairShader + `.vert`); 
             bodyMat = new THREE.MeshLambertMaterial();
 
             await this.loadTexture();
