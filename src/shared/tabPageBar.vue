@@ -1,17 +1,16 @@
 <template>
     <div class="tabPageBar">
         <header>
-            <tabButton :buttonStyle="BtnNewStyle" v-for="(item,index) in tabs" :Content="item.data.key" :key="index"  />
+            <tabButton :buttonStyle="BtnNewStyle" v-for="(item,index) in tabs" :Content="item.data.key" :key="index" :isSelected="false" />
         </header>
         <slot name="tabPages">
 
         </slot>
     </div>
 </template>
-<style>
+<style scoped>
     .tabPageBar{
       display: flex;
-      
       align-items: center;
       flex-direction: column;
       position: fixed;
@@ -28,7 +27,6 @@
       height: 4.342vh;
       border-radius: 5px;
       display: flex;
-     
       flex-direction: row;
       background: rgba(57, 94, 123, 1);
    }
