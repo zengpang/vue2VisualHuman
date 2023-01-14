@@ -1,7 +1,7 @@
 <template>
-<div id="container" >
+    <div id="container">
 
-</div>
+    </div>
 </template>
 <style scoped>
 #container {
@@ -14,10 +14,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { TGALoader } from "three/examples/jsm/loaders/TGALoader";
-
-import {loadFile} from '../lib/loadFile'
-import { materialInfo,materialinit } from '../lib/material';
-
+import { loadFile } from '../lib/loadFile'
+import { materialInfo, materialinit } from '../lib/material';
 const $ = s => document.querySelector(s);
 //展示模型
 let showModel = null;
@@ -32,7 +30,7 @@ let clock = new THREE.Clock();
 const animationPath = 'static/model/Naria@idie.FBX';
 //灯光
 let light = null;
-let lightWorldPos=new THREE.Vector4(0.0,0.0,0.0);
+let lightWorldPos = new THREE.Vector4(0.0, 0.0, 0.0);
 //渲染器
 let render = null;
 //用户交互插件
@@ -41,28 +39,28 @@ let controls = null;
 const modelPath = 'static/model/Naria.FBX';
 //模型材质
 let bodyMat = null;//身体材质
-let headerMat=null;//头部材质
+let headerMat = null;//头部材质
 //贴图资源路径
-const texturePath="static/texture/Naria/";
+const texturePath = "static/texture/Naria/";
 //shader路径
 const shaderPath = 'static/shader/ChacterBodyShader';
-const hairShader='static/shader/ChacterHairShader';
+const hairShader = 'static/shader/ChacterHairShader';
 //shader
 let fragShaderStr = null;
 let vertexShaderStr = null;
 let fragHairShaderStr = null;
 let vertexHairShaderStr = null;
-export default{
-    name:'threeJsShow',
+export default {
+    name: 'threeJsShow',
     data() {
         return {
-          
+
         };
     },
-    methods: { 
+    methods: {
         //读取贴图
         loadTexture() {
-            return new Promise(() => {
+            return new Promise((resolve) => {
                 console.log("加载中");
                 let isLoading = true;
                 const mainTexture = new TGALoader().load(`${texturePath}Naria_D_3.tga`, (texture) => {
@@ -74,7 +72,7 @@ export default{
                 const compMaskTex = new TGALoader().load(`${texturePath}Naria_MCS.tga`);
                 const normalTex = new TGALoader().load(`${texturePath}Naria_N.tga`);
                 const sssTex = new THREE.TextureLoader().load(`${texturePath}preintegrated_falloff_2D.png`);
-                const hairSpecMap=new TGALoader().load(`${texturePath}_ShiftTexture01.tga`);  
+                const hairSpecMap = new TGALoader().load(`${texturePath}_ShiftTexture01.tga`);
                 const path = 'static/texture/Naria/pisa/';
                 const format = '.png';
                 const urls = [
@@ -86,23 +84,10 @@ export default{
                 while (isLoading) {
                     if (mainTexture != null && compMaskTex != null && normalTex != null && sssTex != null && cubeTex != null) {
                         isLoading = false;
-                        bodyMat=materialinit(materialInfo.bodyMatInfo,true,true,vertexShaderStr,fragShaderStr,true);
-                        //在这里更新材质贴图，避免出现贴图错误
-                        bodyMat.uniforms._MainTex.value = mainTexture;
-                        bodyMat.uniforms._CompMaskTex.value = compMaskTex;
-                        bodyMat.uniforms._NormalTex.value = normalTex;
-                        bodyMat.uniforms._sssTexture.value = sssTex;
-                        bodyMat.uniforms._cubeMap.value = cubeTex;
-                        // bodyMat.dithering = true;
-                        headerMat= materialinit(materialInfo.headMatInfo,true,true,vertexHairShaderStr,fragHairShaderStr,true);
-                        //在这里更新材质贴图，避免出现贴图错误
-                        headerMat.uniforms._AnsionMap.value = hairSpecMap;
-                        headerMat.uniforms._cubeMap.value = cubeTex;
-
                     }
                 }
                 console.log("加载结束");
-              
+                resolve({ mainTexture, compMaskTex, normalTex, sssTex, cubeTex, hairSpecMap });
             });
         },
         //材质初始化
@@ -110,9 +95,23 @@ export default{
             fragShaderStr = loadFile(shaderPath + `.frag`);
             vertexShaderStr = loadFile(shaderPath + `.vert`);
             fragHairShaderStr = loadFile(hairShader + `.frag`);
-            vertexHairShaderStr = loadFile(hairShader + `.vert`); 
+            vertexHairShaderStr = loadFile(hairShader + `.vert`);
+            bodyMat = materialinit(materialInfo.bodyMatInfo, true, true, vertexShaderStr, fragShaderStr, true);
+            headerMat = materialinit(materialInfo.headMatInfo, true, true, vertexHairShaderStr, fragHairShaderStr, true);
             // bodyMat = new THREE.MeshLambertMaterial();
-            await this.loadTexture();
+            let textures = await this.loadTexture();
+
+            //在这里更新材质贴图，避免出现贴图错误
+            bodyMat.uniforms._MainTex.value = textures.mainTexture;
+            bodyMat.uniforms._CompMaskTex.value = textures.compMaskTex;
+            bodyMat.uniforms._NormalTex.value = textures.normalTex;
+            bodyMat.uniforms._sssTexture.value = textures.sssTex;
+            bodyMat.uniforms._cubeMap.value = textures.cubeTex;
+            // bodyMat.dithering = true;
+            
+            //在这里更新材质贴图，避免出现贴图错误
+            headerMat.uniforms._AnsionMap.value = textures.hairSpecMap;
+            headerMat.uniforms._cubeMap.value = textures.cubeTex;
         },
 
         //场景初始化
@@ -135,25 +134,25 @@ export default{
             light = new THREE.SpotLight(0xffffff);
             // light.position.set(0, 1.25, 1.25);
             // light.position.set(0, -110, 20);
-            light.matrixWorldAutoUpdate =true;
+            light.matrixWorldAutoUpdate = true;
             light.position.set(200, 130, 250);
-            lightWorldPos=light.position;
-           
+            lightWorldPos = light.position;
+
             console.log(lightWorldPos);
             //告诉点光需要开启阴影投射
             light.castShadow = true;
             light.shadow.bias = -0.000005;
             light.shadow.mapSize.width = 2048; //阴影贴图宽度设置为1024像素
             light.shadow.mapSize.height = 2048; //阴影贴图高度设置为1024像素
-            var ligntCameraHelper = new THREE.SpotLightHelper(light,20);
+            var ligntCameraHelper = new THREE.SpotLightHelper(light, 20);
             ligntCameraHelper.visible = true;
-    // let Ambient = new THREE.AmbientLight(0x404040, 2);
-           scene.add(ligntCameraHelper);
+            // let Ambient = new THREE.AmbientLight(0x404040, 2);
+            scene.add(ligntCameraHelper);
             scene.add(light);
             var shadowCameraHelper = new THREE.CameraHelper(light.shadow.camera);
             shadowCameraHelper.visible = false;
             // let Ambient = new THREE.AmbientLight(0x404040, 2);
-             scene.add(shadowCameraHelper);
+            scene.add(shadowCameraHelper);
         },
         initPlane() {
             console.log("绘制平面");
