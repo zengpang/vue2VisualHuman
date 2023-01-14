@@ -1,6 +1,6 @@
 <template>
     <div id="container">
-
+       
     </div>
 </template>
 <style scoped>
@@ -52,10 +52,30 @@ let vertexHairShaderStr = null;
 
 export default {
     name: 'threeJsShow',
+    props:[
+        'lightPosition'
+        ,'mainColor'
+        ,'speculaColor'
+        ,'specularPow'
+        ,'roughnessAdj'
+        ,'metalAdj'
+        ,'shadowInit'
+        ,'sssVOffset'
+        ,'sssUOffset'
+        ,'skinLightValue'
+        ,'skinSpecValue'
+        ,'Expose'
+    ],
     data() {
         return {
-
+            
         };
+    },
+    watch:{
+        Expose:function(newVal,oldVal)
+        {
+            console.log(newVal);
+        }
     },
     methods: {
         //读取贴图
@@ -101,19 +121,20 @@ export default {
             // bodyMat = new THREE.MeshLambertMaterial();
             let textures = await this.loadTexture();
 
-            //在这里更新材质贴图，避免出现贴图错误
+            
             bodyMat.uniforms._MainTex.value = textures.mainTexture;
             bodyMat.uniforms._CompMaskTex.value = textures.compMaskTex;
             bodyMat.uniforms._NormalTex.value = textures.normalTex;
             bodyMat.uniforms._sssTexture.value = textures.sssTex;
             bodyMat.uniforms._cubeMap.value = textures.cubeTex;
-            // bodyMat.dithering = true;
             
-            //在这里更新材质贴图，避免出现贴图错误
             headerMat.uniforms._AnsionMap.value = textures.hairSpecMap;
             headerMat.uniforms._cubeMap.value = textures.cubeTex;
         },
-
+        UpdateMat()
+        {
+           console.log("环境光强度为"+Expose);
+        },
         //场景初始化
         initScene() {
             scene = new THREE.Scene();
@@ -207,8 +228,7 @@ export default {
             render.outputEncoding = THREE.sRGBEncoding;
             render.shadowMap.enabled = true;
             render.shadowMap.type = THREE.PCFSoftShadowMap;
-            //渲染器添加toneMapping效果
-            // render.toneMapping = THREE.ACESFilmicToneMapping;
+           
             //告诉渲染器需要阴影效果 
             render.setClearColor('#1F2025', 1.0);
             $('#container').appendChild(render.domElement);
@@ -291,6 +311,9 @@ export default {
     },
     mounted() {
         this.draw();
+    },
+    created(){
+        this.$root.neurogen.$on('updateMat',this.UpdateMat);
     }
 }
 </script>
