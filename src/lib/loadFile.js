@@ -40,9 +40,4 @@ export function loadTexture(path,isCube=false,loadSuccess,loadFail)
    }
    return resultTexture;
 }
-export function loadTextures()
-{
-    return new Promise((resolve) => {
-       
-    })
-}
+

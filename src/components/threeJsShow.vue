@@ -13,7 +13,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
-import { TGALoader } from "three/examples/jsm/loaders/TGALoader";
 import { loadFile,loadTexture } from '../lib/loadFile'
 import { materialInfo, materialinit } from '../lib/material';
 const $ = s => document.querySelector(s);
@@ -50,6 +49,7 @@ let fragShaderStr = null;
 let vertexShaderStr = null;
 let fragHairShaderStr = null;
 let vertexHairShaderStr = null;
+
 export default {
     name: 'threeJsShow',
     data() {
@@ -71,9 +71,7 @@ export default {
                 //"static/texture/Naria/Naria_MCS.tga"
                 const compMaskTex = loadTexture(`${texturePath}Naria_MCS.tga`);
                 const normalTex = loadTexture(`${texturePath}Naria_N.tga`);
-             
-                const sssTex = loadTexture(`${texturePath}preintegrated_falloff_2D.png`);
-                
+                const sssTex = loadTexture(`${texturePath}preintegrated_falloff_2D.png`);           
                 const hairSpecMap = loadTexture(`${texturePath}_ShiftTexture01.tga`);
                 const path = 'static/texture/Naria/pisa/';
                 const format = '.png';
@@ -127,7 +125,6 @@ export default {
             // -7.951022465039643, y: 50.66599857875026, z: 84.02389415272548
             camera.position.set(-7.951022465039643, 50.66599857875026, 84.02389415272548);
             console.log(camera);
-
             camera.lookAt(new THREE.Vector3(0, 0, 0));
         },
         //初始化灯光
@@ -146,24 +143,24 @@ export default {
             light.shadow.bias = -0.000005;
             light.shadow.mapSize.width = 2048; //阴影贴图宽度设置为1024像素
             light.shadow.mapSize.height = 2048; //阴影贴图高度设置为1024像素
-            var ligntCameraHelper = new THREE.SpotLightHelper(light, 20);
+            let ligntCameraHelper = new THREE.SpotLightHelper(light, 20);
             ligntCameraHelper.visible = true;
             // let Ambient = new THREE.AmbientLight(0x404040, 2);
             scene.add(ligntCameraHelper);
             scene.add(light);
-            var shadowCameraHelper = new THREE.CameraHelper(light.shadow.camera);
+            let shadowCameraHelper = new THREE.CameraHelper(light.shadow.camera);
             shadowCameraHelper.visible = false;
             // let Ambient = new THREE.AmbientLight(0x404040, 2);
             scene.add(shadowCameraHelper);
         },
         initPlane() {
             console.log("绘制平面");
-            var planeGeo = new THREE.PlaneGeometry(100, 100, 10, 10);//创建平面
-            var planeMat = new THREE.MeshLambertMaterial({  //创建材料
+            let planeGeo = new THREE.PlaneGeometry(100, 100, 10, 10);//创建平面
+            let planeMat = new THREE.MeshLambertMaterial({  //创建材料
                 color: 0xFFFFFF,
                 wireframe: false
             });
-            var planeMesh = new THREE.Mesh(planeGeo, planeMat);//创建网格模型
+            let planeMesh = new THREE.Mesh(planeGeo, planeMat);//创建网格模型
             planeMesh.position.set(0, -30, 0);//设置平面的坐标
             planeMesh.rotation.x = -0.5 * Math.PI;//将平面绕X轴逆时针旋转90度
             planeMesh.receiveShadow = true;//允许接收阴影
