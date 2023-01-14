@@ -1,7 +1,13 @@
 <template>
     <div class="tabPageBar">
         <header>
-            <tabButton :buttonStyle="BtnNewStyle" v-for="(item,index) in tabs" :Content="item.data.key" :key="index" :isSelected="false" />
+            <tabButton :buttonStyle="BtnNewStyle" 
+            v-for="(item,index) in tabs" 
+            :Content="item.data.key" 
+            :key="index" 
+            :isSelected="item.data.key===selectedContent"
+            :onClick="tagBtnClick"
+            />
         </header>
         <slot name="tabPages">
 
@@ -28,6 +34,8 @@
       border-radius: 5px;
       display: flex;
       flex-direction: row;
+      align-items: center;
+      
       background: rgba(57, 94, 123, 1);
    }
 </style>
@@ -39,7 +47,8 @@ export default {
     data() {
         return {
             BtnNewStyle:"",
-            tabs:[]
+            tabs:[],
+            selectedContent:""
         };
     },
     components:{
@@ -58,18 +67,23 @@ export default {
                 {
                     throw new Error("tabPageBar不能直接包含除tabPage以外的插件");
                 }
-                console.log(tabs[i].data.key);
+                
             } 
             
            //按钮初始数量
-            const BtnsDefalut=4;
+            const BtnsDefalut=6;
             //按钮数量
             const BtnsNumber=tabs.length;
             const BtnScale=BtnsDefalut/BtnsNumber;
-            const BtnWidth='width:'+(19.5)*(BtnScale)+"vw";
-            const BtnMarginLeft='margin-left:'+(0.5)*BtnScale+"vw";
+            const BtnWidth='width:'+(13.48)*(BtnScale)+"vw";
+            const BtnMarginLeft='margin-left:'+(0.66)*BtnScale+"vw";
             this.BtnNewStyle=BtnWidth+';'+BtnMarginLeft;
             this.tabs=tabs;
+            this.selectedContent=tabs[0].data.key;
+       },
+       tagBtnClick(event){
+   
+         this.selectedContent=event.currentTarget.innerText;
        }
     },
     mounted(){
