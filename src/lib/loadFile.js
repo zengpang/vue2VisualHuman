@@ -18,9 +18,27 @@ const textureType={
    "hdr":3
 }
 //读取单张图片
-export function loadTexture(path)
+export function loadTexture(path,isCube=false,loadSuccess,loadFail)
 {
+   let resultTexture=null;
+   if(isCube)
+   {
+      resultTexture=new THREE.CubeTextureLoader().load(path);
+      return resultTexture;
+   }
+   const type=path.split(".").slice(-1);
+ 
    
+   switch(textureType[type])
+   {
+     case textureType.png:{
+        resultTexture= new THREE.TextureLoader().load(path,loadSuccess,loadFail);
+     };break;
+     case textureType.tga:{
+        resultTexture= new TGALoader().load(path,loadSuccess,loadFail);
+     };break;
+   }
+   return resultTexture;
 }
 export function loadTextures()
 {

@@ -14,7 +14,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { TGALoader } from "three/examples/jsm/loaders/TGALoader";
-import { loadFile } from '../lib/loadFile'
+import { loadFile,loadTexture } from '../lib/loadFile'
 import { materialInfo, materialinit } from '../lib/material';
 const $ = s => document.querySelector(s);
 //展示模型
@@ -63,16 +63,18 @@ export default {
             return new Promise((resolve) => {
                 console.log("加载中");
                 let isLoading = true;
-                const mainTexture = new TGALoader().load(`${texturePath}Naria_D_3.tga`, (texture) => {
+                const mainTexture = loadTexture(`${texturePath}Naria_D_3.tga`,false, (texture) => {
                     texture.wrapS = THREE.RepeatWrapping;
                     texture.wrapT = THREE.RepeatWrapping;
                     texture.repeat.set(4, 4);
                 });
                 //"static/texture/Naria/Naria_MCS.tga"
-                const compMaskTex = new TGALoader().load(`${texturePath}Naria_MCS.tga`);
-                const normalTex = new TGALoader().load(`${texturePath}Naria_N.tga`);
-                const sssTex = new THREE.TextureLoader().load(`${texturePath}preintegrated_falloff_2D.png`);
-                const hairSpecMap = new TGALoader().load(`${texturePath}_ShiftTexture01.tga`);
+                const compMaskTex = loadTexture(`${texturePath}Naria_MCS.tga`);
+                const normalTex = loadTexture(`${texturePath}Naria_N.tga`);
+             
+                const sssTex = loadTexture(`${texturePath}preintegrated_falloff_2D.png`);
+                
+                const hairSpecMap = loadTexture(`${texturePath}_ShiftTexture01.tga`);
                 const path = 'static/texture/Naria/pisa/';
                 const format = '.png';
                 const urls = [
@@ -80,7 +82,7 @@ export default {
                     path + 'py' + format, path + 'ny' + format,
                     path + 'pz' + format, path + 'nz' + format
                 ];
-                let cubeTex = new THREE.CubeTextureLoader().load(urls);
+                let cubeTex = loadTexture(urls,true);
                 while (isLoading) {
                     if (mainTexture != null && compMaskTex != null && normalTex != null && sssTex != null && cubeTex != null) {
                         isLoading = false;
