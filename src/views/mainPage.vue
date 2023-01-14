@@ -1,7 +1,7 @@
 <template>
-    <!-- <threeJsShow >
+    <threeJsShow >
 
-    </threeJsShow> -->
+    </threeJsShow>
 </template>
 <style scoped>
 
@@ -9,7 +9,7 @@
 <script>
 
 import threeJsShow from '../components/threeJsShow.vue';
-import { materialInfo } from '../lib/material';
+
 
 export default  {
     name: 'mainPage',

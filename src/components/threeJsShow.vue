@@ -14,10 +14,9 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { TGALoader } from "three/examples/jsm/loaders/TGALoader";
-import { mergeUniforms } from 'three/src/renderers/shaders/UniformsUtils.js'
-import { UniformsLib } from 'three/src/renderers/shaders/UniformsLib.js'
+
 import {loadFile} from '../lib/loadFile'
-import { materialInfo } from '../lib/material';
+import { materialInfo,materialinit } from '../lib/material';
 
 const $ = s => document.querySelector(s);
 //展示模型
@@ -87,25 +86,7 @@ export default{
                 while (isLoading) {
                     if (mainTexture != null && compMaskTex != null && normalTex != null && sssTex != null && cubeTex != null) {
                         isLoading = false;
-                        bodyMat = new THREE.ShaderMaterial({
-                            uniforms:
-                                mergeUniforms([
-                                    UniformsLib.lights,
-                                    materialInfo.bodyMatInfo
-                                ]),
-
-                            //236,65,65
-                            vertexShader: vertexShaderStr,
-                            fragmentShader: fragShaderStr,
-                            lights: true,
-                            dithering: true,
-
-                        });
-
-                        //允许材质更新
-                        bodyMat.uniformsNeedUpdate = true;
-                        bodyMat.needsUpdate = true;
-
+                        bodyMat=materialinit(materialInfo.bodyMatInfo,true,true,vertexShaderStr,fragShaderStr,true);
                         //在这里更新材质贴图，避免出现贴图错误
                         bodyMat.uniforms._MainTex.value = mainTexture;
                         bodyMat.uniforms._CompMaskTex.value = compMaskTex;
@@ -113,26 +94,7 @@ export default{
                         bodyMat.uniforms._sssTexture.value = sssTex;
                         bodyMat.uniforms._cubeMap.value = cubeTex;
                         // bodyMat.dithering = true;
-
-                        headerMat= new THREE.ShaderMaterial({
-                            uniforms:
-                                mergeUniforms([
-                                    UniformsLib.lights,
-                                    materialInfo.headMatInfo,
-                                ]),
-
-                            //236,65,65
-                            vertexShader: vertexHairShaderStr,
-                            fragmentShader: fragHairShaderStr,
-                            lights: true,
-                            dithering: true,
-
-                        });
-                        
-                        //允许材质更新
-                        headerMat.uniformsNeedUpdate = true;
-                        headerMat.needsUpdate = true;
-
+                        headerMat= materialinit(materialInfo.headMatInfo,true,true,vertexHairShaderStr,fragHairShaderStr,true);
                         //在这里更新材质贴图，避免出现贴图错误
                         headerMat.uniforms._AnsionMap.value = hairSpecMap;
                         headerMat.uniforms._cubeMap.value = cubeTex;
@@ -149,7 +111,7 @@ export default{
             vertexShaderStr = loadFile(shaderPath + `.vert`);
             fragHairShaderStr = loadFile(hairShader + `.frag`);
             vertexHairShaderStr = loadFile(hairShader + `.vert`); 
-            bodyMat = new THREE.MeshLambertMaterial();
+            // bodyMat = new THREE.MeshLambertMaterial();
             await this.loadTexture();
         },
 
