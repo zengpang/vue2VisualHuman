@@ -8,3 +8,8 @@ export function loadFile(path)
     xhr.send(null);
     return xhr.status === okStatus ? xhr.responseText : null;
 }
+//读取复数贴图
+export function loadTextures(path)
+{
+    
+}
