@@ -1,5 +1,5 @@
 <template>
-    <div class="floatWindow">
+    <div class="icon">
 
     </div>
 </template>
@@ -8,7 +8,7 @@
 </style>
 <script>
 export default {
-    name: 'floatWindow',
+    name: 'icon',
     data() {
         return {
 

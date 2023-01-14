@@ -1,5 +1,5 @@
 <template>
-    <div class="floatWindow">
+    <div class="tabButton">
  
     </div>
  </template>
@@ -8,12 +8,14 @@
  </style>
  <script>
     export default{
-       name:'TabPage',
+       name:'tabButton',
        data(){
-          
+         return {
+
+         };  
        },
        methods:{
- 
+         
        }
     }
  </script>

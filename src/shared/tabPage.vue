@@ -1,14 +1,15 @@
 <template>
-    <div class="floatWindow">
-
+    <div class="tabPage">
+         <a href="">123</a>
     </div>
 </template>
 <style>
 
 </style>
 <script>
+
 export default {
-    name: 'floatWindow',
+    name: 'tabPage',
     data() {
         return {
 

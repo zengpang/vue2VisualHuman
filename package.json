@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "three": "^0.146.0",
+    "vant": "^2.12.53",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },
