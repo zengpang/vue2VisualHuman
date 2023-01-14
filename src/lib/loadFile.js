@@ -1,4 +1,6 @@
- //本地文件读取
+import * as THREE from 'three';
+import { TGALoader } from "three/examples/jsm/loaders/TGALoader";
+//本地文件读取
 export function loadFile(path)
 {
     let xhr = new XMLHttpRequest(),
@@ -8,7 +10,21 @@ export function loadFile(path)
     xhr.send(null);
     return xhr.status === okStatus ? xhr.responseText : null;
 }
+//图片类型
+const textureType={
+   
+   "png":1,
+   "tga":2,
+   "hdr":3
+}
+//读取单张图片
+export function loadTexture(path)
+{
+   
+}
 export function loadTextures()
 {
-    
+    return new Promise((resolve) => {
+       
+    })
 }
