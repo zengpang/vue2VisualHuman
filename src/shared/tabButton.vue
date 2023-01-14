@@ -1,7 +1,7 @@
 <template>
-    <div class="tabButton">
- 
-    </div>
+    <button class="tabButton" :style="buttonStyle" >
+         {{Content}}
+    </button>
  </template>
  <style>
      
@@ -9,6 +9,7 @@
  <script>
     export default{
        name:'tabButton',
+       props:['buttonStyle','onClick','Content'],
        data(){
          return {
 

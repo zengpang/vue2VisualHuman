@@ -1,6 +1,6 @@
 <template>
     <div class="tabPage">
-         <a href="">123</a>
+         <a href="">{{title}}</a>
     </div>
 </template>
 <style>
@@ -10,9 +10,10 @@
 
 export default {
     name: 'tabPage',
+    props:['title'],
     data() {
         return {
-
+           
         };
     },
     methods: {

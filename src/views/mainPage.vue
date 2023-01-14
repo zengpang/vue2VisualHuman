@@ -5,15 +5,20 @@
         </threeJsShow> -->
         <tabPageBar>
            
-                <tabPage slot="tabPages"></tabPage>
-                <tabPage slot="tabPages"></tabPage>
-                <tabPage slot="tabPages"></tabPage>
-            
+                <tabPage slot="tabPages" :key="'身体1'"></tabPage>
+                <tabPage slot="tabPages" :key="'身体2'"></tabPage>
+                <tabPage slot="tabPages" :key="'头发2'"></tabPage>
+               
         </tabPageBar>
     </div>
 </template>
 <style scoped>
+  .mainPage{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
+  }
 </style>
 <script>
 
