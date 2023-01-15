@@ -19,13 +19,7 @@
       display: flex;
       align-items: center;
       flex-direction: column;
-      position: fixed;
-      bottom: 20px;
-      width: 92.36vw;
-      min-height: 240px;
-      height: 32.62vh;
-      border-radius: 15px;
-      background: rgba(25, 69, 104, 1);
+      
    }
    .tabPageBar header{
       width: 86.513vw;
@@ -35,15 +29,15 @@
       display: flex;
       flex-direction: row;
       align-items: center;
-      
       background: rgba(57, 94, 123, 1);
    }
 </style>
 <script>
+import agency from '../lib/agency';
 import tabButton from './tabButton.vue';
 export default {
     name: 'tabPageBar',
-    props:['selected','onUpdateSelected'],
+    props:[],
     data() {
         return {
             BtnNewStyle:"",
@@ -84,6 +78,7 @@ export default {
        tagBtnClick(event){
    
          this.selectedContent=event.currentTarget.innerText;
+         agency.$emit("updateSelect",this.selectedContent);
        }
     },
     mounted(){

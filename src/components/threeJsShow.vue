@@ -13,8 +13,10 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
+import agency from '../lib/agency';
 import { loadFile,loadTexture } from '../lib/loadFile'
 import { materialInfo, materialinit } from '../lib/material';
+
 const $ = s => document.querySelector(s);
 //展示模型
 let showModel = null;
@@ -313,7 +315,7 @@ export default {
         this.draw();
     },
     created(){
-        this.$root.neurogen.$on('updateMat',this.UpdateMat);
+        agency.$on('updateMat',this.UpdateMat);
     }
 }
 </script>

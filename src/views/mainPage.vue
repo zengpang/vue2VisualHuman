@@ -1,53 +1,46 @@
 <template>
-    <div class="mainPage">
-        <!-- <threeJsShow>
+  <div class="mainPage">
+    <!-- <threeJsShow>
 
         </threeJsShow> -->
-        <tabPageBar>
-           
-                <tabPage slot="tabPages" :key="'身体1'"></tabPage>
-                <tabPage slot="tabPages" :key="'身体2'"></tabPage>
-                <tabPage slot="tabPages" :key="'头发2'"></tabPage>
-               
-        </tabPageBar>
-    </div>
+    <floatWindow class="floatWindow" title="设置界面" />
+  </div>
 </template>
 <style scoped>
-  .mainPage{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-  }
+.mainPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.floatWindow {
+  position: fixed;
+  bottom: 20px;
+}
 </style>
 <script>
-
-import threeJsShow from '../components/threeJsShow.vue';
-
-import { materialInfo } from '../lib/material';
-import tabPage from '../shared/tabPage.vue';
-import tabPageBar from '../shared/tabPageBar.vue';
-import Vue from 'vue'
+import threeJsShow from "../components/threeJsShow.vue";
+import { materialInfo } from "../lib/material";
+import Vue from "vue";
+import floatWindow from "../shared/floatWindow.vue";
 
 export default {
-    name: 'mainPage',
-    data() {
-        return {
-            neurogen:new Vue()
-        };
-    },
-    components: {
-        threeJsShow,
-        tabPageBar,
-        tabPage
-    },
-    methods: {
-        //    Test(){
-        //      console.log(materialInfo.bodyMatInfo._mainColor);
-        //    }
-    },
-    mounted() {
-        // this.Test();
-    }
-}
+  name: "mainPage",
+  data() {
+    return {
+      
+    };
+  },
+  components: {
+    threeJsShow,
+    floatWindow
+  },
+  methods: {
+    //    Test(){
+    //      console.log(materialInfo.bodyMatInfo._mainColor);
+    //    }
+  },
+  mounted() {
+    // this.Test();
+  }
+};
 </script>
