@@ -8,8 +8,8 @@
     <tabPageBar >
       <tabPage slot="tabPages" :key="'身体1'" name="身体1">
         <div slot="tabPage" class="tabPageContent">
-            <formInput inputType="number" title="环境光贴图强度" class="numberInput"/>
-            <formInput inputType="number" title="高光度" class="numberInput"/>
+            <formInput inputType="number" hint="请输入数字" title="环境光贴图强度" class="numberInput"/>
+            <formInput inputType="color" title="高光度"  class="numberInput"/>
         </div>
       </tabPage>
       <tabPage slot="tabPages" :key="'身体2'" name="身体2">
@@ -95,7 +95,7 @@ export default {
     return {};
   },
   methods: {
-    matInputEvent(){
+    matInputEvent(event){
 
     }
   }
