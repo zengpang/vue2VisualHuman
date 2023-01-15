@@ -1,13 +1,29 @@
 <template>
   <div class="formInput">
-    <p :class="'formInputTitle'">{{ title }}</p>
+    <p :class="'formInputTitle'" >
+      {{ title+(inputType==='range'?"值为"+rangeShowValue:'') }} 
+    </p>
     <input
       :type="inputType ? inputType : 'number'"
       :class="inputType"
-      @input="oninputEvent"
+      @input="matInputEvent"
       :placeholder="hint"
       :value="matValue"
       :id="inputid"
+      v-if="inputType!='range'"
+    />
+    <input
+      :type="inputType ? inputType : 'number'"
+      :class="inputType"
+      @input="matInputEvent"
+      :placeholder="hint"
+      :value="matValue"
+      :id="inputid"
+      :max="maxValue?maxValue:1"
+      :min="minValue?minValue:0"
+      :step="stepValue"
+      v-model="rangeShowValue"
+      v-if="inputType==='range'"
     />
   </div>
 </template>
@@ -57,6 +73,9 @@
 }
 
 .formInput .range {
+  width: 100%;
+  min-height: 24px;
+  height: 4.342vh;
 }
 .formInput .formInputTitle {
   align-self: flex-start;
@@ -66,9 +85,20 @@
 import {rgbToHex,hexToRGB} from '../lib/color';
 export default {
   name: "formInput",
-  props: ["hint", "inputType", "title", "oninputEvent","value","inputid"],
+  props: [
+    "hint", 
+  "inputType",
+   "title",
+   "value",
+   "inputid",
+   "maxValue",
+   "minValue",
+   "stepValue"
+  ],
   data() {
-    return {};
+    return {
+      rangeShowValue:0
+    };
   },
   computed:{
     matValue:{
@@ -79,10 +109,11 @@ export default {
          {
             case 'color':{
               result=rgbToHex(this.value.x,this.value.y,this.value.z);
+              console.log(result);
             };break;
             
          }
-    
+         console.log("属性修改")
          return result;
       },
       set(newValue)
@@ -91,6 +122,31 @@ export default {
       }
     }
   },
-  methods: {}
+  methods: {
+    matInputEvent(event){
+      
+      switch(event.target.id)
+      {
+        case'_ExposeInput':{
+            console.log(event.target.value);
+        };break;
+        case'_mainColorInput':{
+            
+        };break;
+        case'_shadowInitInput':{
+          
+         
+            this.rangeShowValue=event.target.value;
+            console.log(event.target.value);
+           
+         
+        };break;
+      }
+    },
+  },
+  mounted(){
+   
+    this.rangeShowValue=this.value;
+  }
 };
 </script>

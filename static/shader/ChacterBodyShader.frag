@@ -21,6 +21,7 @@ uniform samplerCube _cubeMap;
 
 //高光
 uniform float _specularPow;
+//高光颜色
 uniform vec4 _speculaColor;
 uniform vec4 _LightColor0;
 
@@ -40,13 +41,19 @@ uniform float _Expose;
 //粗糙度
 uniform float _roughnessAdj;
 uniform float _metalAdj;
+//阴影强度
 uniform float _shadowInit;
 
 //SSS皮肤效果
+//SSS V轴偏转值
 uniform float _sssVOffset;
+//SSS U轴偏转值
 uniform float _sssUOffset;
+//皮肤光照值
 uniform float _skinLightValue;
+//皮肤高度值
 uniform float _skinSpecValue;
+//贴图tilling值(贴图重复度)
 uniform vec2 tilling;
 
 varying vec3 objectPos;

@@ -13,22 +13,31 @@
             hint="请输入数字" 
             title="环境光贴图强度"  
             class="numberInput"           
-            :oninputEvent="matInputEvent"
             :value="this.matValue.bodyMatInfo._Expose.value"
             :inputid="'_ExposeInput'"
             />
             <formInput 
             inputType="color" 
             title="主颜色"  
-            class="numberInput"
-            :oninputEvent="matInputEvent" 
+            class="numberInput" 
             :value="this.matValue.bodyMatInfo._mainColor.value"
             :inputid="'_mainColorInput'"
             />
         </div>
       </tabPage>
       <tabPage slot="tabPages" :key="'参数2'" name="参数2">
-        <div slot="tabPage" class="tabPageContent">参数2</div>
+        <div slot="tabPage" class="tabPageContent">
+            <formInput 
+            inputType="range" 
+            hint="请输入数字" 
+            title="阴影强度"
+            
+            class="numberInput"           
+            :value="this.matValue.bodyMatInfo._shadowInit.value"
+            :inputid="'_shadowInitInput'"
+            :stepValue="0.1"
+            />
+        </div>
       </tabPage>
       <tabPage slot="tabPages" :key="'参数3'" name="参数3">
         <div slot="tabPage" class="tabPageContent">参数3</div>
@@ -109,24 +118,12 @@ export default {
   },
   data() {
     return {
-        matValue:materialInfo
+        matValue:materialInfo,
+        componentTitle:'阴影强度'
     };
   },
   methods: {
-    matInputEvent(event){
-      switch(event.target.id)
-      {
-        case'_ExposeInput':{
-
-        };break;
-        case'_mainColorInput':{
-            
-        };break;
-        case'_ExposeInput':{
-            
-        };break;
-      }
-    },
+  
     findInput()
     {
 
