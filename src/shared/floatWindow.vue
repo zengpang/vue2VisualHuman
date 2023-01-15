@@ -55,7 +55,7 @@
             class="numberInput"           
             :value="this.matValue.bodyMatInfo._sssVOffset.value"
             :inputid="'_sssVOffsetInput'"
-            :stepValue="0.1"
+            :stepValue="0.001"
             />
             <formInput 
             inputType="range" 
@@ -64,12 +64,55 @@
             class="numberInput"           
             :value="this.matValue.bodyMatInfo._sssUOffset.value"
             :inputid="'_sssUOffsetInput'"
-            :stepValue="0.1"
+            :stepValue="0.001"
             />
         </div>
       </tabPage>
       <tabPage slot="tabPages" :key="'参数4'" name="参数4">
-        <div slot="tabPage" class="tabPageContent">参数4</div>
+        <div slot="tabPage" class="tabPageContent">
+        <formInput 
+            inputType="range" 
+            hint="请输入数字" 
+            title="粗糙度偏转值"   
+            class="numberInput"           
+            :value="this.matValue.bodyMatInfo._roughnessAdj.value"
+            :inputid="'_roughnessAdjInput'"
+            :stepValue="0.001"
+            :minValue="-1"
+            />
+            <formInput 
+            inputType="range" 
+            hint="请输入数字" 
+            title="金属度偏转值"   
+            class="numberInput"           
+            :value="this.matValue.bodyMatInfo._metalAdj.value"
+            :inputid="'_metalAdjInput'"
+            :stepValue="0.001"
+            :minValue="-1"
+            />
+        </div>
+      </tabPage>
+      <tabPage slot="tabPages" :key="'参数5'" name="参数5">
+        <div slot="tabPage" class="tabPageContent">
+        <formInput 
+            inputType="range" 
+            hint="请输入数字" 
+            title="皮肤亮度"   
+            class="numberInput"           
+            :value="this.matValue.bodyMatInfo._skinLightValue.value"
+            :inputid="'_skinLightValueInput'"
+            :stepValue="0.001"
+            />
+            <formInput 
+            inputType="range" 
+            hint="请输入数字" 
+            title="皮肤高光度（油腻度）"   
+            class="numberInput"           
+            :value="this.matValue.bodyMatInfo._skinSpecValue.value"
+            :inputid="'_skinSpecValueInput'"
+            :stepValue="0.001"
+            />
+        </div>
       </tabPage>
     </tabPageBar>
   </div>
