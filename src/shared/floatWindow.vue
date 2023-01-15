@@ -2,14 +2,14 @@
   <div class="floatWindow">
     <p class="windowTitle">{{title}}</p>
     <tabPageBar >
-      <tabPage slot="tabPages" :key="'身体1'" name="身体1" :isSelected="true">
-        <div slot="tabPage">身体1</div>
+      <tabPage slot="tabPages" :key="'身体1'" name="身体1">
+        <div slot="tabPage" class="tabPageContent">身体1</div>
       </tabPage>
-      <tabPage slot="tabPages" :key="'身体2'" name="身体2" :isSelected="false">
-        <div slot="tabPage">身体2</div>
+      <tabPage slot="tabPages" :key="'身体2'" name="身体2">
+        <div slot="tabPage" class="tabPageContent">身体2</div>
       </tabPage>
-      <tabPage slot="tabPages" :key="'头发2'" name="头发2" :isSelected="false">
-        <div slot="tabPage">头发2</div>
+      <tabPage slot="tabPages" :key="'头发2'" name="头发2">
+        <div slot="tabPage" class="tabPageContent">头发2</div>
       </tabPage>
     </tabPageBar>
   </div>
@@ -31,6 +31,11 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+}
+.tabPageContent{
+    height: 20.8vh;
+    min-height: 170px;
+    
 }
 </style>
 <script>

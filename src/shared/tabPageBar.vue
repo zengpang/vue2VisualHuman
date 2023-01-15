@@ -55,13 +55,11 @@ export default {
          console.log(this.$slots.tabPages);
          if(!tabs) throw new Error("tabPageBar不能为空");
          for (let i = 0; i < tabs.length; i++) {
-                
                 const tabtype=tabs[i].tag.split('-').slice(-1);
                 if(tabtype!='tabPage')
                 {
                     throw new Error("tabPageBar不能直接包含除tabPage以外的插件");
                 }
-                
             } 
             
            //按钮初始数量
@@ -74,15 +72,16 @@ export default {
             this.BtnNewStyle=BtnWidth+';'+BtnMarginLeft;
             this.tabs=tabs;
             this.selectedContent=tabs[0].data.key;
+            agency.$emit("updateSelect",this.selectedContent);
        },
        tagBtnClick(event){
-   
          this.selectedContent=event.currentTarget.innerText;
          agency.$emit("updateSelect",this.selectedContent);
        }
     },
     mounted(){
       this.initBar();
+      
     }
 }
 </script>
