@@ -1,9 +1,10 @@
 <template>
   <div class="floatWindow">
     <header>
-        <textIcon iconType="reset" class="resetBtn" />
+        <textIcon iconType="reset" class="resetBtn" :onClick="resetClick"  />
         <p class="windowTitle">{{title}}</p>
-        <textIcon iconType="arrow" class="icon" />
+        <textIcon iconType="arrow" :onClick="hideBtnClick"  class="icon" />
+        
     </header>
     <tabPageBar >
       <tabPage slot="tabPages" :key="'参数1'" name="参数1">
@@ -199,8 +200,16 @@ export default {
     findInput()
     {
 
+    },
+    hideBtnClick(event)
+    {
+      console.log("隐藏页面");
     }
-   
+    ,
+    resetClick(event)
+    {
+      console.log("刷新页面");
+    }
   },
  
   mounted(){

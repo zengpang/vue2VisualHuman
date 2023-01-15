@@ -1,5 +1,5 @@
 <template>
-  <p :class="'textIcon '+iconType"></p>
+  <p :class="'textIcon '+iconType" @click="onClick"></p>
 </template>
 <style>
 @font-face {
@@ -26,7 +26,7 @@
 
 export default {
   name: "textIcon",
-  props: ["iconType"],
+  props: ["iconType","onClick"],
   data() {
     return {};
   },
