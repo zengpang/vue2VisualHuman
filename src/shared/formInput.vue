@@ -6,7 +6,7 @@
       :class="inputType"
       :on-input="oninputEvent"
       :placeholder="hint"
-      :value="value"
+      :value="matValue"
     />
   </div>
 </template>
@@ -62,13 +62,34 @@
 }
 </style>
 <script>
+import {hslToHex} from '../lib/color';
 export default {
   name: "formInput",
   props: ["hint", "inputType", "title", "oninputEvent","value"],
   data() {
     return {};
   },
-
+  computed:{
+    matValue:{
+      get()
+      {
+         let result=this.value;
+         switch(this.inputType)
+         {
+            case 'color':{
+              result=hslToHex(this.value.x,this.value.y,this.value.z);
+            };break;
+            
+         }
+         console.log(result);
+         return result;
+      },
+      set(newValue)
+      {
+         console.log(newValue);
+      }
+    }
+  },
   methods: {}
 };
 </script>

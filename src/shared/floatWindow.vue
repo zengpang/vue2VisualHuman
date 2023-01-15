@@ -9,7 +9,7 @@
       <tabPage slot="tabPages" :key="'身体1'" name="身体1">
         <div slot="tabPage" class="tabPageContent">
             <formInput inputType="number" hint="请输入数字" title="环境光贴图强度"  class="numberInput" :value="this.matValue.bodyMatInfo._Expose.value"/>
-            <formInput inputType="color" title="高光度"  class="numberInput" />
+            <formInput inputType="color" title="高光度"  class="numberInput" :value="this.matValue.bodyMatInfo._mainColor.value" />
         </div>
       </tabPage>
       <tabPage slot="tabPages" :key="'身体2'" name="身体2">
@@ -82,7 +82,7 @@ import tabPage from './tabPage.vue';
 import textIcon from './textIcon.vue';
 import formInput from './formInput.vue';
 import { materialInfo } from '../lib/material';
-
+import {hslToHex,hexToHSL} from '../lib/color';
 export default {
   name: "floatWindow",
   props:['title'],
@@ -103,8 +103,12 @@ export default {
     },
    
   },
+ 
   mounted(){
-    console.log(this.matValue.bodyMatInfo._mainColor.value);
+   // console.log(this.matValue.bodyMatInfo._mainColor.value.x);
+   console.log(hslToHex(0.9254901960784314, 0.2549019607843137, 0.2549019607843137));
+   console.log(hexToHSL('#EC4141'));
+    
   }
 };
 </script>
