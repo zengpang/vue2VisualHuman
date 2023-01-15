@@ -18,6 +18,9 @@
 .textIcon.arrow:before{
     content: "\e652";
 } 
+.textIcon.reset:before{
+    content: "\e67d";
+}
 </style>
 <script>
 
