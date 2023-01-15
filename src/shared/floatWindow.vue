@@ -8,8 +8,8 @@
     <tabPageBar >
       <tabPage slot="tabPages" :key="'身体1'" name="身体1">
         <div slot="tabPage" class="tabPageContent">
-            <formInput inputType="number" hint="请输入数字" title="环境光贴图强度" class="numberInput"/>
-            <formInput inputType="color" title="高光度"  class="numberInput"/>
+            <formInput inputType="number" hint="请输入数字" title="环境光贴图强度"  class="numberInput" :value="this.matValue.bodyMatInfo._Expose.value"/>
+            <formInput inputType="color" title="高光度"  class="numberInput" />
         </div>
       </tabPage>
       <tabPage slot="tabPages" :key="'身体2'" name="身体2">
@@ -81,6 +81,7 @@ import tabPageBar from './tabPageBar.vue';
 import tabPage from './tabPage.vue';
 import textIcon from './textIcon.vue';
 import formInput from './formInput.vue';
+import { materialInfo } from '../lib/material';
 
 export default {
   name: "floatWindow",
@@ -92,12 +93,18 @@ export default {
     formInput
   },
   data() {
-    return {};
+    return {
+        matValue:materialInfo
+    };
   },
   methods: {
     matInputEvent(event){
 
-    }
+    },
+   
+  },
+  mounted(){
+    console.log(this.matValue.bodyMatInfo._mainColor.value);
   }
 };
 </script>

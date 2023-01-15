@@ -6,6 +6,7 @@
       :class="inputType"
       :on-input="oninputEvent"
       :placeholder="hint"
+      :value="value"
     />
   </div>
 </template>
@@ -63,11 +64,11 @@
 <script>
 export default {
   name: "formInput",
-  props: ["hint", "inputType", "title", "oninputEvent"],
+  props: ["hint", "inputType", "title", "oninputEvent","value"],
   data() {
     return {};
   },
-  
+
   methods: {}
 };
 </script>
