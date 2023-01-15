@@ -10,7 +10,7 @@
             />
         </header>
         <slot name="tabPages">
-
+ 
         </slot>
     </div>
 </template>

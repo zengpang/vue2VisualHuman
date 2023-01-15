@@ -1,6 +1,6 @@
 <template>
   <div class="floatWindow">
-    <p class="windowTitle">{{title}}</p>
+    <header><p></p><p class="windowTitle">{{title}}</p><textIcon iconType="arrow" class="icon" /></header>
     <tabPageBar >
       <tabPage slot="tabPages" :key="'身体1'" name="身体1">
         <div slot="tabPage" class="tabPageContent">身体1</div>
@@ -15,13 +15,6 @@
   </div>
 </template>
 <style scoped>
-.windowTitle{
-  color: white;
-  font-size: 18px;
-  margin-bottom: 9px;
-  margin-top: 9px;
-  font-weight: bold;
-}
 .floatWindow {
   width: 92.36vw;
   min-height: 240px;
@@ -32,22 +25,46 @@
   align-items: center;
   flex-direction: column;
 }
+.floatWindow header{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+}
+.floatWindow p{
+   width: 100px; 
+}
+.floatWindow .windowTitle{
+  color: white;
+  font-size: 18px;
+  margin-bottom: 9px;
+  margin-top: 9px;
+  font-weight: bold;
+  
+}
+.floatWindow .icon{
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+}
 .tabPageContent{
     height: 20.8vh;
     min-height: 170px;
-    
+
 }
 </style>
 <script>
 import tabPageBar from './tabPageBar.vue';
 import tabPage from './tabPage.vue';
-
+import textIcon from './textIcon.vue';
 export default {
   name: "floatWindow",
   props:['title'],
   components:{
     tabPageBar,
-    tabPage
+    tabPage,
+    textIcon
   },
   data() {
     return {};
