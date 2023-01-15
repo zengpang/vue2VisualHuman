@@ -31,16 +31,16 @@
       :class="inputType"
       @input="matInputEvent"
       :placeholder="hint"
-      :value="matValue"
+      :value="matValue.x"
       :id="inputid+'x'"
-     
+      
     />
     <input
       :type="'number'"
       :class="inputType"
       @input="matInputEvent"
       :placeholder="hint"
-      :value="matValue"
+      :value="matValue.y"
       :id="inputid+'y'"
      
     />
@@ -49,7 +49,7 @@
       :class="inputType"
       @input="matInputEvent"
       :placeholder="hint"
-      :value="matValue"
+      :value="matValue.z"
       :id="inputid+'z'"
       
     />
@@ -100,7 +100,26 @@
   background: none;
   border: none;
 }
-
+.formInput .inputs{
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+.formInput .inputs .vector3{
+  width: 25%;
+  border: none;
+  padding: 0;
+  border-radius: 5px;
+  background: rgba(122, 147, 167, 1);
+  min-height: 24px;
+  height: 4.342vh;
+  padding-left: 7px;
+  padding-right: 7px;
+  color: white;
+}
+.formInput .inputs .vector3:focus {
+  outline: none;
+}
 .formInput .range {
   width: 100%;
   min-height: 24px;
@@ -163,12 +182,8 @@ export default {
             
         };break;
         case'_shadowInitInput':{
-          
-         
             this.rangeShowValue=event.target.value;
             console.log(event.target.value);
-           
-         
         };break;
       }
     },

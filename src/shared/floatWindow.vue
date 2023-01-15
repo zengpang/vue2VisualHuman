@@ -37,11 +37,11 @@
             :stepValue="0.1"
             />
             <formInput 
-            inputType="color" 
-            title="高光颜色"  
+            inputType="vector3" 
+            title="灯光位置"  
             class="numberInput" 
-            :value="this.matValue.bodyMatInfo._speculaColor.value"
-            :inputid="'_speculaColorInput'"
+            :value="this.matValue.bodyMatInfo.lightPosition.value"
+            :inputid="'lightPositionInput'"
             />
             
         </div>
