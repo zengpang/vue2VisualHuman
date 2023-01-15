@@ -4,7 +4,7 @@
 <style>
 @font-face {
   font-family: "iconfont";
-  /* Project id 3786935 */
+
 
   src: url("../assets/icon/iconfont.woff2?t=1673695615597") format("woff2"),
     url("../assets/icon/iconfont.woff?t=1673695615597") format("woff"),

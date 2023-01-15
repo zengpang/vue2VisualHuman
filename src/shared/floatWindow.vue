@@ -3,7 +3,10 @@
     <header><p></p><p class="windowTitle">{{title}}</p><textIcon iconType="arrow" class="icon" /></header>
     <tabPageBar >
       <tabPage slot="tabPages" :key="'身体1'" name="身体1">
-        <div slot="tabPage" class="tabPageContent">身体1</div>
+        <div slot="tabPage" class="tabPageContent">
+            <formInput inputType="number" title="高光度" class="numberInput"/>
+           
+        </div>
       </tabPage>
       <tabPage slot="tabPages" :key="'身体2'" name="身体2">
         <div slot="tabPage" class="tabPageContent">身体2</div>
@@ -48,6 +51,14 @@
     flex-direction: row;
     justify-content: end;
 }
+.floatWindow .tabPageContent{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.floatWindow .tabPageContent .numberInput{
+    width: 95%;
+}
 .tabPageContent{
     height: 20.8vh;
     min-height: 170px;
@@ -58,13 +69,15 @@
 import tabPageBar from './tabPageBar.vue';
 import tabPage from './tabPage.vue';
 import textIcon from './textIcon.vue';
+import formInput from './formInput.vue';
 export default {
   name: "floatWindow",
   props:['title'],
   components:{
     tabPageBar,
     tabPage,
-    textIcon
+    textIcon,
+    formInput
   },
   data() {
     return {};

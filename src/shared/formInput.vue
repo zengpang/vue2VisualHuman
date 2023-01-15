@@ -1,27 +1,33 @@
 <template>
-    <div>
+    <div class="formInput">
        <p :class="'formInputTitle'">{{title}}</p>
        <input 
        :type="inputType?inputType:'number'" 
-       :class="'formInput'+' '+inputType">
+       :class="inputType"/>
     </div>
 </template>
 <style scoped>
    .formInput{
      color: white;
      font-size: 12px;
+     font-family: "SimHei";
+     display: flex;
+     align-items: center;
+     flex-direction: column;
    }
-   .formInput.number{
+   .formInput .number{
+      width: 100%;
+      border: none;
+      padding: 0;
+   }
+   .formInput .color{
 
    }
-   .formInput.color{
+   .formInput .range{
 
    }
-   .formInput.range{
-
-   }
-   .formInputTitle{
-
+   .formInput .formInputTitle{
+    align-self: flex-start;
    }
    
 </style>
