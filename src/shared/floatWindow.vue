@@ -6,17 +6,32 @@
         <textIcon iconType="arrow" class="icon" />
     </header>
     <tabPageBar >
-      <tabPage slot="tabPages" :key="'身体1'" name="身体1">
+      <tabPage slot="tabPages" :key="'参数1'" name="参数1">
         <div slot="tabPage" class="tabPageContent">
-            <formInput inputType="number" hint="请输入数字" title="环境光贴图强度"  class="numberInput" :value="this.matValue.bodyMatInfo._Expose.value"/>
-            <formInput inputType="color" title="高光度"  class="numberInput" :value="this.matValue.bodyMatInfo._mainColor.value" />
+            <formInput 
+            inputType="number" 
+            hint="请输入数字" 
+            title="环境光贴图强度"  
+            class="numberInput"           
+            :oninputEvent="matInputEvent"
+            :value="this.matValue.bodyMatInfo._Expose.value"
+            :inputid="'_ExposeInput'"
+            />
+            <formInput 
+            inputType="color" 
+            title="主颜色"  
+            class="numberInput"
+            :oninputEvent="matInputEvent" 
+            :value="this.matValue.bodyMatInfo._mainColor.value"
+            :inputid="'_mainColorInput'"
+            />
         </div>
       </tabPage>
-      <tabPage slot="tabPages" :key="'身体2'" name="身体2">
-        <div slot="tabPage" class="tabPageContent">身体2</div>
+      <tabPage slot="tabPages" :key="'参数2'" name="参数2">
+        <div slot="tabPage" class="tabPageContent">参数2</div>
       </tabPage>
-      <tabPage slot="tabPages" :key="'头发2'" name="头发2">
-        <div slot="tabPage" class="tabPageContent">头发2</div>
+      <tabPage slot="tabPages" :key="'参数3'" name="参数3">
+        <div slot="tabPage" class="tabPageContent">参数3</div>
       </tabPage>
     </tabPageBar>
   </div>
@@ -82,7 +97,7 @@ import tabPage from './tabPage.vue';
 import textIcon from './textIcon.vue';
 import formInput from './formInput.vue';
 import { materialInfo } from '../lib/material';
-import {hslToHex,hexToHSL} from '../lib/color';
+import {rgbToHex,hexToRGB} from '../lib/color';
 export default {
   name: "floatWindow",
   props:['title'],
@@ -99,15 +114,28 @@ export default {
   },
   methods: {
     matInputEvent(event){
+      switch(event.target.id)
+      {
+        case'_ExposeInput':{
 
+        };break;
+        case'_mainColorInput':{
+            
+        };break;
+        case'_ExposeInput':{
+            
+        };break;
+      }
     },
+    findInput()
+    {
+
+    }
    
   },
  
   mounted(){
-   // console.log(this.matValue.bodyMatInfo._mainColor.value.x);
-   console.log(hslToHex(0.9254901960784314, 0.2549019607843137, 0.2549019607843137));
-   console.log(hexToHSL('#EC4141'));
+  
     
   }
 };

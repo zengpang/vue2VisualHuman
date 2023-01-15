@@ -4,9 +4,10 @@
     <input
       :type="inputType ? inputType : 'number'"
       :class="inputType"
-      :on-input="oninputEvent"
+      @input="oninputEvent"
       :placeholder="hint"
       :value="matValue"
+      :id="inputid"
     />
   </div>
 </template>
@@ -62,10 +63,10 @@
 }
 </style>
 <script>
-import {hslToHex} from '../lib/color';
+import {rgbToHex,hexToRGB} from '../lib/color';
 export default {
   name: "formInput",
-  props: ["hint", "inputType", "title", "oninputEvent","value"],
+  props: ["hint", "inputType", "title", "oninputEvent","value","inputid"],
   data() {
     return {};
   },
@@ -77,11 +78,11 @@ export default {
          switch(this.inputType)
          {
             case 'color':{
-              result=hslToHex(this.value.x,this.value.y,this.value.z);
+              result=rgbToHex(this.value.x,this.value.y,this.value.z);
             };break;
             
          }
-         console.log(result);
+    
          return result;
       },
       set(newValue)

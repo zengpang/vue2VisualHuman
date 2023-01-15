@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     updateSelect(selectedName) {
-      console.log("触发");
+   
       if (this.name === selectedName) {
         this.isSelected = true;
       } else {
