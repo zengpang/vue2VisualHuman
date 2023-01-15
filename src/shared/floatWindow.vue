@@ -30,17 +30,46 @@
             <formInput 
             inputType="range" 
             hint="请输入数字" 
-            title="阴影强度"
-            
+            title="阴影强度"   
             class="numberInput"           
             :value="this.matValue.bodyMatInfo._shadowInit.value"
             :inputid="'_shadowInitInput'"
             :stepValue="0.1"
             />
+            <formInput 
+            inputType="color" 
+            title="高光颜色"  
+            class="numberInput" 
+            :value="this.matValue.bodyMatInfo._speculaColor.value"
+            :inputid="'_speculaColorInput'"
+            />
+            
         </div>
       </tabPage>
       <tabPage slot="tabPages" :key="'参数3'" name="参数3">
-        <div slot="tabPage" class="tabPageContent">参数3</div>
+        <div slot="tabPage" class="tabPageContent">
+            <formInput 
+            inputType="range" 
+            hint="请输入数字" 
+            title="SSS V轴偏转值"   
+            class="numberInput"           
+            :value="this.matValue.bodyMatInfo._sssVOffset.value"
+            :inputid="'_sssVOffsetInput'"
+            :stepValue="0.1"
+            />
+            <formInput 
+            inputType="range" 
+            hint="请输入数字" 
+            title="SSS U轴偏转值"   
+            class="numberInput"           
+            :value="this.matValue.bodyMatInfo._sssUOffset.value"
+            :inputid="'_sssUOffsetInput'"
+            :stepValue="0.1"
+            />
+        </div>
+      </tabPage>
+      <tabPage slot="tabPages" :key="'参数4'" name="参数4">
+        <div slot="tabPage" class="tabPageContent">参数4</div>
       </tabPage>
     </tabPageBar>
   </div>

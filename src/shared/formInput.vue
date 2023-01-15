@@ -10,7 +10,7 @@
       :placeholder="hint"
       :value="matValue"
       :id="inputid"
-      v-if="inputType!='range'"
+      v-if="inputType!='range'&&inputType!='vector3'"
     />
     <input
       :type="inputType ? inputType : 'number'"
@@ -23,8 +23,37 @@
       :min="minValue?minValue:0"
       :step="stepValue"
       v-model="rangeShowValue"
-      v-if="inputType==='range'"
+      v-if="inputType==='range'&&inputType!='vector3'"
     />
+    <div class="inputs" v-if="inputType==='vector3'">
+      <input
+      :type="'number'"
+      :class="inputType"
+      @input="matInputEvent"
+      :placeholder="hint"
+      :value="matValue"
+      :id="inputid+'x'"
+     
+    />
+    <input
+      :type="'number'"
+      :class="inputType"
+      @input="matInputEvent"
+      :placeholder="hint"
+      :value="matValue"
+      :id="inputid+'y'"
+     
+    />
+    <input
+      :type="'number'"
+      :class="inputType"
+      @input="matInputEvent"
+      :placeholder="hint"
+      :value="matValue"
+      :id="inputid+'z'"
+      
+    />
+    </div>
   </div>
 </template>
 <style scoped>
