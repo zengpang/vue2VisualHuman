@@ -130,7 +130,7 @@
 }
 </style>
 <script>
-import {rgbToHex,hexToRGB} from '../lib/color';
+import {rgbToHex} from '../lib/color';
 export default {
   name: "formInput",
   props: [
@@ -172,44 +172,11 @@ export default {
   },
   methods: {
     matInputEvent(event){
-      
-      switch(event.target.id)
+      if(this.inputType==='ranger')
       {
-        case'_ExposeInput':{
-            console.log(event.target.value);
-        };break;
-        case'_mainColorInput':{
-            
-        };break;
-        case'_shadowInitInput':{
-            this.rangeShowValue=event.target.value;
-            console.log(event.target.value);
-        };break;
-        case 'lightPositionInputx':{
-
-        };break;
-        case 'lightPositionInputy':{
-
-        };break;
-        case 'lightPositionInputz':{
-
-        };break;
-        case '_sssVOffsetInput':{
-
-        };break;
-        case '_sssUOffsetInput':{
-
-        };break;
-        case '_roughnessAdjInput':{
-
-        };break;
-        case '_metalAdjInput':{
-
-        };break;
-        case '_skinLightValueInput':{
-          
-        };break;
+        this.rangeShowValue=event.target.value;
       }
+      
     },
   },
   mounted(){

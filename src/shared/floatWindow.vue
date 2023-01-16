@@ -1,119 +1,123 @@
 <template>
-  <div :class="'floatWindow'+(isHideWindow?' hide':'')">
+  <div :class="'floatWindow' + (isHideWindow ? ' hide' : '')">
     <header>
-        <textIcon iconType="reset" class="resetBtn" :onClick="resetClick"  />
-        <p class="windowTitle" >{{title}}</p>
-        <textIcon iconType="arrow" :onClick="hideBtnClick" :isClicked="isHideWindow"  class="icon" />
-        <van-toast id="van-toast" />
+      <textIcon iconType="reset" class="resetBtn" :onClick="resetClick" />
+      <p class="windowTitle">{{ title }}</p>
+      <textIcon
+        iconType="arrow"
+        :onClick="hideBtnClick"
+        :isClicked="isHideWindow"
+        class="icon"
+      />
+      <van-toast id="van-toast" />
     </header>
-  
-    <tabPageBar >
+
+    <tabPageBar>
       <tabPage slot="tabPages" :key="'参数1'" name="参数1">
         <div slot="tabPage" class="tabPageContent">
-            <formInput 
-            inputType="number" 
-            hint="请输入数字" 
-            title="环境光贴图强度"  
-            class="numberInput"           
+          <formInput
+            inputType="number"
+            hint="请输入数字"
+            title="环境光贴图强度"
+            class="numberInput"
             :value="this.matValue.bodyMatInfo._Expose.value"
             :inputid="'_ExposeInput'"
-            />
-            <formInput 
-            inputType="color" 
-            title="主颜色"  
-            class="numberInput" 
+          />
+          <formInput
+            inputType="color"
+            title="主颜色"
+            class="numberInput"
             :value="this.matValue.bodyMatInfo._mainColor.value"
             :inputid="'_mainColorInput'"
-            />
+          />
         </div>
       </tabPage>
       <tabPage slot="tabPages" :key="'参数2'" name="参数2">
         <div slot="tabPage" class="tabPageContent">
-            <formInput 
-            inputType="range" 
-            hint="请输入数字" 
-            title="阴影强度"   
-            class="numberInput"           
+          <formInput
+            inputType="range"
+            hint="请输入数字"
+            title="阴影强度"
+            class="numberInput"
             :value="this.matValue.bodyMatInfo._shadowInit.value"
             :inputid="'_shadowInitInput'"
             :stepValue="0.1"
-            />
-            <formInput 
-            inputType="vector3" 
-            title="灯光位置"  
-            class="numberInput" 
+          />
+          <formInput
+            inputType="vector3"
+            title="灯光位置"
+            class="numberInput"
             :value="this.matValue.bodyMatInfo.lightPosition.value"
             :inputid="'lightPositionInput'"
-            />
-            
+          />
         </div>
       </tabPage>
       <tabPage slot="tabPages" :key="'参数3'" name="参数3">
         <div slot="tabPage" class="tabPageContent">
-            <formInput 
-            inputType="range" 
-            hint="请输入数字" 
-            title="SSS V轴偏转值"   
-            class="numberInput"           
+          <formInput
+            inputType="range"
+            hint="请输入数字"
+            title="SSS V轴偏转值"
+            class="numberInput"
             :value="this.matValue.bodyMatInfo._sssVOffset.value"
             :inputid="'_sssVOffsetInput'"
             :stepValue="0.001"
-            />
-            <formInput 
-            inputType="range" 
-            hint="请输入数字" 
-            title="SSS U轴偏转值"   
-            class="numberInput"           
+          />
+          <formInput
+            inputType="range"
+            hint="请输入数字"
+            title="SSS U轴偏转值"
+            class="numberInput"
             :value="this.matValue.bodyMatInfo._sssUOffset.value"
             :inputid="'_sssUOffsetInput'"
             :stepValue="0.001"
-            />
+          />
         </div>
       </tabPage>
       <tabPage slot="tabPages" :key="'参数4'" name="参数4">
         <div slot="tabPage" class="tabPageContent">
-        <formInput 
-            inputType="range" 
-            hint="请输入数字" 
-            title="粗糙度偏转值"   
-            class="numberInput"           
+          <formInput
+            inputType="range"
+            hint="请输入数字"
+            title="粗糙度偏转值"
+            class="numberInput"
             :value="this.matValue.bodyMatInfo._roughnessAdj.value"
             :inputid="'_roughnessAdjInput'"
             :stepValue="0.001"
             :minValue="-1"
-            />
-            <formInput 
-            inputType="range" 
-            hint="请输入数字" 
-            title="金属度偏转值"   
-            class="numberInput"           
+          />
+          <formInput
+            inputType="range"
+            hint="请输入数字"
+            title="金属度偏转值"
+            class="numberInput"
             :value="this.matValue.bodyMatInfo._metalAdj.value"
             :inputid="'_metalAdjInput'"
             :stepValue="0.001"
             :minValue="-1"
-            />
+          />
         </div>
       </tabPage>
       <tabPage slot="tabPages" :key="'参数5'" name="参数5">
         <div slot="tabPage" class="tabPageContent">
-        <formInput 
-            inputType="range" 
-            hint="请输入数字" 
-            title="皮肤亮度"   
-            class="numberInput"           
+          <formInput
+            inputType="range"
+            hint="请输入数字"
+            title="皮肤亮度"
+            class="numberInput"
             :value="this.matValue.bodyMatInfo._skinLightValue.value"
             :inputid="'_skinLightValueInput'"
             :stepValue="0.001"
-            />
-            <formInput 
-            inputType="range" 
-            hint="请输入数字" 
-            title="皮肤高光度（油腻度）"   
-            class="numberInput"           
+          />
+          <formInput
+            inputType="range"
+            hint="请输入数字"
+            title="皮肤高光度（油腻度）"
+            class="numberInput"
             :value="this.matValue.bodyMatInfo._skinSpecValue.value"
             :inputid="'_skinSpecValueInput'"
             :stepValue="0.001"
-            />
+          />
         </div>
       </tabPage>
     </tabPageBar>
@@ -129,12 +133,12 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  transition: all .3s;
+  transition: all 0.3s;
 }
-.floatWindow.hide{
+.floatWindow.hide {
   bottom: -20vh;
 }
-.floatWindow header{
+.floatWindow header {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -142,100 +146,90 @@
   align-items: center;
 }
 
-.floatWindow .windowTitle{
+.floatWindow .windowTitle {
   color: white;
   font-size: 18px;
   margin-bottom: 9px;
   margin-top: 9px;
   font-weight: bold;
-  width: 100px; 
+  width: 100px;
 }
-.floatWindow .icon{
-    display: flex;
-    flex-direction: row;
-    justify-content: end;
-    width: 100px; 
-    transition: all .3s;
+.floatWindow .icon {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  width: 100px;
+  transition: all 0.3s;
 }
 /* .floatWindow.hide .icon{
 
   transform: rotateZ(180deg);
 } */
-.loading{
+.loading {
   width: 50px;
   height: 50px;
   z-index: 99;
 }
-.floatWindow .resetBtn{
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    width: 100px;
-   
+.floatWindow .resetBtn {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  width: 100px;
 }
-.floatWindow .tabPageContent{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-y: scroll;
+.floatWindow .tabPageContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: scroll;
 }
-.floatWindow .tabPageContent .numberInput{
-    width: 95%;
+.floatWindow .tabPageContent .numberInput {
+  width: 95%;
 }
-.tabPageContent{
-    height: 20.8vh;
-    min-height: 170px;
-
+.tabPageContent {
+  height: 20.8vh;
+  min-height: 170px;
 }
 </style>
 <script>
-import tabPageBar from './tabPageBar.vue';
-import tabPage from './tabPage.vue';
-import textIcon from './textIcon.vue';
-import formInput from './formInput.vue';
-import { materialInfo } from '../lib/material';
-import {rgbToHex,hexToRGB} from '../lib/color';
+import tabPageBar from "./tabPageBar.vue";
+import tabPage from "./tabPage.vue";
+import textIcon from "./textIcon.vue";
+import formInput from "./formInput.vue";
+import { materialInfo } from "../lib/material";
+import { rgbToHex, hexToRGB } from "../lib/color";
 
 export default {
   name: "floatWindow",
-  props:['title'],
-  components:{
+  props: ["title"],
+  components: {
     tabPageBar,
     tabPage,
     textIcon,
-    formInput,
-    
+    formInput
   },
   data() {
     return {
-        matValue:materialInfo,
-        componentTitle:'阴影强度',
-        isHideWindow:false
+      matValue: materialInfo,
+      componentTitle: "阴影强度",
+      isHideWindow: false
     };
   },
   methods: {
-  
-    findInput()
-    {
-
-    },
-    hideBtnClick(event)
-    {
+    findInput() {},
+    hideBtnClick(event) {
       console.log("隐藏页面");
-      this.isHideWindow=!this.isHideWindow;
-    }
-    ,
-    resetClick(event)
-    {
+      this.isHideWindow = !this.isHideWindow;
+    },
+    resetClick(event) {
       console.log("刷新页面");
-      
-      console.log(this.$toast);
+      this.$dialog.confirm({
+        title: "确认是否重置参数设置并刷新页面",
+      }).then(()=>{
+        location.reload();
+      });
     }
   },
- 
-  mounted(){
-    
-    
-  }
+
+  mounted() {}
 };
 </script>

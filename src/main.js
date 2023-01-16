@@ -2,12 +2,13 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-
 import { Toast } from 'vant';
-
 import {Button} from 'vant'
-Vue.use(Button)
+import { Dialog } from 'vant';
 
+// 全局注册
+Vue.use(Dialog);
+Vue.use(Button);
 Vue.use(Toast);
 Vue.config.productionTip = false
 

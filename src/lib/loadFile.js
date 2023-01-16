@@ -1,6 +1,7 @@
 
 import { CubeTextureLoader,TextureLoader } from "three";
 import { TGALoader } from "three/examples/jsm/loaders/TGALoader";
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 //本地文件读取
 export function loadFile(path)
 {
@@ -40,5 +41,37 @@ export function loadTexture(path,isCube=false,loadSuccess,loadFail)
      };break;
    }
    return resultTexture;
+}
+export function loadModel(modelPath,bodyMat,headerMat,pos)
+{
+   return new Promise(resolve => {
+      let loader = new FBXLoader();
+      loader.load(modelPath,object=>{
+         let showModel = object;
+         showModel.position.set(pos[0], pos[1], pos[2]);
+         // geometry.center(); //居中显示
+         showModel.children[1].material[0] = bodyMat;
+         showModel.children[1].material[1] = headerMat;
+         showModel.traverse(function(child){
+            if (child.isMesh) {
+               child.castShadow = true;
+               child.receiveShadow = true;
+             }
+         })
+         
+         resolve(showModel);
+      })
+   })
+}
+export function loadAnim(animPath,showModel)
+{
+
+   return new Promise(resolve => {
+      new FBXLoader().load(animPath,object=>{
+          //创建动画混合器，并指定模型，混合器会自动根据指定模型寻找骨骼，并绑定
+        let mixer = new THREE.AnimationMixer(showModel);
+        
+      });
+   })
 }
 

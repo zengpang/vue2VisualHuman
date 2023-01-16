@@ -18,7 +18,8 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import agency from "../lib/agency";
-import { loadFile, loadTexture } from "../lib/loadFile";
+import { rgbToHex } from "../lib/color";
+import { loadFile, loadTexture,loadModel } from "../lib/loadFile";
 import { materialInfo, materialinit } from "../lib/material";
 
 const $ = s => document.querySelector(s);
@@ -35,7 +36,7 @@ let clock = new THREE.Clock();
 const animationPath = "static/model/Naria@idie.FBX";
 //灯光
 let light = null;
-let lightWorldPos = new THREE.Vector4(0.0, 0.0, 0.0);
+let lightPos = null;
 //渲染器
 let render = null;
 //用户交互插件
@@ -160,8 +161,13 @@ export default {
         true
       );
       // bodyMat = new THREE.MeshLambertMaterial();
+      this.$toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: "加载贴图中"
+      });
       let textures = await this.loadTexture();
-
+      this.$toast.clear();
       bodyMat.uniforms._MainTex.value = textures.mainTexture;
       bodyMat.uniforms._CompMaskTex.value = textures.compMaskTex;
       bodyMat.uniforms._NormalTex.value = textures.normalTex;
@@ -171,50 +177,68 @@ export default {
       headerMat.uniforms._AnsionMap.value = textures.hairSpecMap;
       headerMat.uniforms._cubeMap.value = textures.cubeTex;
     },
-    UpdateMat(matTypeid) {
+    UpdateMat(matTypeid, value) {
       switch (matTypeid) {
         case "_ExposeInput":
           {
+            bodyMat.uniforms._Expose.value = value;
+            headerMat.uniforms._Expose.value = value;
           }
           break;
         case "_mainColorInput":
           {
+            bodyMat.uniforms._mainColor.value = rgbToHex(value);
           }
           break;
         case "_shadowInitInput":
           {
+            bodyMat.uniforms._shadowInit.value = value;
+            headerMat.uniforms._shadowInit.value = value;
           }
           break;
         case "lightPositionInputx":
           {
+            light.position.set(value, lightPos.value.y, lightPos.value.z);
+            lightPos = light.position;
           }
           break;
         case "lightPositionInputy":
           {
+            light.position.set(lightPos.value.x, value, lightPos.value.z);
+            lightPos = light.position;
           }
           break;
         case "lightPositionInputz":
           {
+            light.position.set(lightPos.value.x, lightPos.value.y, value);
+            lightPos = light.position;
           }
           break;
         case "_sssVOffsetInput":
           {
+            bodyMat.uniforms._sssVOffset = value;
           }
           break;
         case "_sssUOffsetInput":
           {
+            bodyMat.uniforms._sssUOffset = value;
           }
           break;
         case "_roughnessAdjInput":
           {
+            bodyMat.uniforms._roughnessAdj = value;
+            headerMat.uniforms._roughnessAdj = value;
           }
           break;
         case "_metalAdjInput":
           {
+            bodyMat.uniforms._metalAdjInput = value;
+            headerMat.uniforms._metalAdjInput = value;
           }
           break;
         case "_skinLightValueInput":
           {
+            bodyMat.uniforms._skinLightValue = value;
           }
           break;
       }
@@ -238,7 +262,7 @@ export default {
         50.66599857875026,
         84.02389415272548
       );
-      console.log(camera);
+      
       camera.lookAt(new THREE.Vector3(0, 0, 0));
     },
     //初始化灯光
@@ -248,10 +272,12 @@ export default {
       // light.position.set(0, 1.25, 1.25);
       // light.position.set(0, -110, 20);
       light.matrixWorldAutoUpdate = true;
-      light.position.set(200, 130, 250);
-      lightWorldPos = light.position;
-
-      console.log(lightWorldPos);
+      light.position.set(
+        materialInfo.bodyMatInfo.lightPosition.value.x,
+        materialInfo.bodyMatInfo.lightPosition.value.y,
+        materialInfo.bodyMatInfo.lightPosition.value.z
+      );
+      lightPos = light.position;
       //告诉点光需要开启阴影投射
       light.castShadow = true;
       light.shadow.bias = -0.000005;
@@ -282,35 +308,12 @@ export default {
       scene.add(planeMesh); //将平面添加到场景中
     },
 
-    initModelFbx() {
+   async initModelFbx() {
       console.log("模型加载");
-      let loader = new FBXLoader();
-      loader.load(modelPath, function(object) {
-        //模型身体材质
-        let bodymat = bodyMat;
-        //模型头发材质
-        let headermat = headerMat;
-        console.log(object);
-        showModel = object;
-        showModel.position.set(0, -30, 0);
-        // geometry.center(); //居中显示
-        showModel.children[1].material[0] = bodymat;
-        showModel.children[1].material[1] = headermat;
-        // showModel.children[1].material=mat;
-        //开启阴影
-        showModel.traverse(function(child) {
-          if (child.isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-          }
-        });
-        //添加骨骼辅助
-        // let meshHelper = new THREE.SkeletonHelper(showModel);
-        // scene.add(meshHelper);
-        scene.add(showModel);
-        console.log(showModel);
-        console.log(showModel.children[1]);
-      });
+      
+      showModel=await loadModel(modelPath,bodyMat,headerMat,[0,-30,0]);
+      scene.add(showModel);
+  
     },
     //渲染器初始化
     initRender() {
@@ -356,9 +359,12 @@ export default {
         //添加至动画混合器数组
         animationMixers.push(mixer);
         //挂载动画
+        console.log(showModel);
         showModel.animations.push(object.animations[0]);
+        
         //获取动画片
         let action = mixer.clipAction(showModel.animations[0]);
+
         //播放动画片
         action.play();
       });
