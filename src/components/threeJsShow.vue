@@ -18,8 +18,8 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import agency from "../lib/agency";
-import { rgbToHex } from "../lib/color";
-import { loadFile, loadTexture,loadModel } from "../lib/loadFile";
+import { hexToRGB } from "../lib/color";
+import { loadFile, loadTexture, loadModel } from "../lib/loadFile";
 import { materialInfo, materialinit } from "../lib/material";
 
 const $ = s => document.querySelector(s);
@@ -178,16 +178,23 @@ export default {
       headerMat.uniforms._cubeMap.value = textures.cubeTex;
     },
     UpdateMat(matTypeid, value) {
+      console.log("触发材质更改");
       switch (matTypeid) {
         case "_ExposeInput":
           {
             bodyMat.uniforms._Expose.value = value;
             headerMat.uniforms._Expose.value = value;
+            console.log("_Expose更改");
           }
           break;
         case "_mainColorInput":
           {
-            bodyMat.uniforms._mainColor.value = rgbToHex(value);
+            let colorValue = hexToRGB(value);
+            bodyMat.uniforms._mainColor.value = new THREE.Vector3(
+              colorValue[0],
+              colorValue[1],
+              colorValue[2]
+            );
           }
           break;
         case "_shadowInitInput":
@@ -214,31 +221,44 @@ export default {
             lightPos = light.position;
           }
           break;
-        case "_sssVOffsetInput":
+        case "_HairColorInput":
           {
-            bodyMat.uniforms._sssVOffset = value;
+            let colorValue = hexToRGB(value);
+            console.log(value);
+            headerMat.uniforms._HairColor.value = new THREE.Vector3(
+              colorValue[0],
+              colorValue[1],
+              colorValue[2]
+            );
           }
           break;
         case "_sssUOffsetInput":
           {
-            bodyMat.uniforms._sssUOffset = value;
+            bodyMat.uniforms._sssUOffset.value = value;
+            console.log(value);
           }
           break;
+
         case "_roughnessAdjInput":
           {
-            bodyMat.uniforms._roughnessAdj = value;
-            headerMat.uniforms._roughnessAdj = value;
+            bodyMat.uniforms._roughnessAdj.value = value;
+            headerMat.uniforms._roughnessAdj.value = value;
           }
           break;
         case "_metalAdjInput":
           {
-            bodyMat.uniforms._metalAdjInput = value;
-            headerMat.uniforms._metalAdjInput = value;
+            bodyMat.uniforms._metalAdj.value = value;
+            headerMat.uniforms._metalAdj.value = value;
           }
           break;
         case "_skinLightValueInput":
           {
-            bodyMat.uniforms._skinLightValue = value;
+            bodyMat.uniforms._skinLightValue.value = value;
+          }
+          break;
+        case "_skinSpecValueInput":
+          {
+            bodyMat.uniforms._skinSpecValue.value = value;
           }
           break;
       }
@@ -262,7 +282,7 @@ export default {
         50.66599857875026,
         84.02389415272548
       );
-      
+
       camera.lookAt(new THREE.Vector3(0, 0, 0));
     },
     //初始化灯光
@@ -308,12 +328,16 @@ export default {
       scene.add(planeMesh); //将平面添加到场景中
     },
 
-   async initModelFbx() {
+    async initModelFbx() {
       console.log("模型加载");
-      
-      showModel=await loadModel(modelPath,bodyMat,headerMat,[0,-30,0]);
+      this.$toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: "加载模型中"
+      });
+      showModel = await loadModel(modelPath, bodyMat, headerMat, [0, -30, 0]);
       scene.add(showModel);
-  
+      this.$toast.clear();
     },
     //渲染器初始化
     initRender() {
@@ -361,7 +385,7 @@ export default {
         //挂载动画
         console.log(showModel);
         showModel.animations.push(object.animations[0]);
-        
+
         //获取动画片
         let action = mixer.clipAction(showModel.animations[0]);
 

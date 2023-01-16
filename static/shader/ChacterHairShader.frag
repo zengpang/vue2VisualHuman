@@ -14,7 +14,7 @@ uniform vec3 color;
 uniform vec3 lightPosition;
 uniform vec3 _mainColor;
 //贴图
-uniform sampler2D _MainTex;
+// uniform sampler2D _MainTex;
 uniform sampler2D _NormalTex;
 uniform samplerCube _cubeMap;
 
@@ -23,7 +23,7 @@ uniform vec4 _LightColor0;
 uniform float _shadowInit;
 
 //头发高光1
-uniform vec4 _HairColor;
+uniform vec3 _HairColor;
 uniform sampler2D _AnsionMap;
 uniform vec4 _AnsionMap_ST;
 uniform vec4 _speculaColor1;
@@ -163,10 +163,10 @@ void main(){
     float NdotH= dot(nDir,hDir);
    
     //贴图操作
-    vec3 mainTex=texture2D(_MainTex,vUv).xyz;
+    // vec3 mainTex=texture2D(_MainTex,vUv).xyz;
    
     /*基础颜色*/
-    vec3 albedoColor=pow(mainTex,vec3(2.2,2.2,2.2));
+    vec3 albedoColor=pow(_HairColor,vec3(2.2,2.2,2.2));
     vec3 baseColor= albedoColor.xyz;
     vec3 directDiffuse=baseColor;
     /*阴影*/

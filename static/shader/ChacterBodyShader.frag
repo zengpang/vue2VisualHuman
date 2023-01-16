@@ -174,6 +174,7 @@ void main(){
     vec4 compMaskTex=texture2D(_CompMaskTex,vUv);
     /*基础颜色*/
     vec3 albedoColor=pow(mainTex,vec3(2.2,2.2,2.2));
+
     float metal=saturate(compMaskTex.g+_metalAdj);
     vec3 baseColor= albedoColor.xyz*(1.0-metal);
     /*阴影*/
@@ -223,7 +224,7 @@ void main(){
     // vec3 finalColor=(diffuseCommon*_mainColor);
     //最终颜色=直接光漫反射+高光+IBL+间接光镜面反射
     vec3 finalColor=directDiffuse+specfinalColor+envDiffuse*_skinLightValue+envspecular;
-   
+    finalColor=finalColor*_mainColor;
     finalColor=ACETompping(finalColor);
     //vec4 finalShadow=vec4(vec3(0.0, 0.0, 0.0), 1.0 * (1.0-  getShadowMask() ) );
     vec3 finalColor_gamma=pow(finalColor,vec3(1./2.2,1./2.2,1./2.2));

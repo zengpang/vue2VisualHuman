@@ -63,15 +63,5 @@ export function loadModel(modelPath,bodyMat,headerMat,pos)
       })
    })
 }
-export function loadAnim(animPath,showModel)
-{
 
-   return new Promise(resolve => {
-      new FBXLoader().load(animPath,object=>{
-          //创建动画混合器，并指定模型，混合器会自动根据指定模型寻找骨骼，并绑定
-        let mixer = new THREE.AnimationMixer(showModel);
-        
-      });
-   })
-}
 

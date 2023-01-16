@@ -130,6 +130,7 @@
 }
 </style>
 <script>
+import agency from '../lib/agency';
 import {rgbToHex} from '../lib/color';
 export default {
   name: "formInput",
@@ -176,7 +177,7 @@ export default {
       {
         this.rangeShowValue=event.target.value;
       }
-      
+      agency.$emit("updateMat",event.target.id,event.target.value);
     },
   },
   mounted(){

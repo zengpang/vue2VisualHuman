@@ -25,7 +25,7 @@
           />
           <formInput
             inputType="color"
-            title="主颜色"
+            title="身体主颜色"
             class="numberInput"
             :value="this.matValue.bodyMatInfo._mainColor.value"
             :inputid="'_mainColorInput'"
@@ -55,13 +55,11 @@
       <tabPage slot="tabPages" :key="'参数3'" name="参数3">
         <div slot="tabPage" class="tabPageContent">
           <formInput
-            inputType="range"
-            hint="请输入数字"
-            title="SSS V轴偏转值"
+            inputType="color"
+            title="头发颜色"
             class="numberInput"
-            :value="this.matValue.bodyMatInfo._sssVOffset.value"
-            :inputid="'_sssVOffsetInput'"
-            :stepValue="0.001"
+            :value="this.matValue.headMatInfo._HairColor.value"
+            :inputid="'_HairColorInput'"
           />
           <formInput
             inputType="range"
@@ -196,7 +194,7 @@ import tabPage from "./tabPage.vue";
 import textIcon from "./textIcon.vue";
 import formInput from "./formInput.vue";
 import { materialInfo } from "../lib/material";
-import { rgbToHex, hexToRGB } from "../lib/color";
+
 
 export default {
   name: "floatWindow",

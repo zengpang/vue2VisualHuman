@@ -29,7 +29,7 @@ let materialInfo = {
     headMatInfo: {
         lightPosition: { value: new THREE.Vector3(200, 130, 250) },
         tilling: { value: new THREE.Vector2(1, 1) },
-        _MainTex: { value: null },
+        // _MainTex: { value: null },
         _NormalTex: { value: null },
         _specularPow: { value: 3 },
         _roughnessAdj: { value: 0.23 },
