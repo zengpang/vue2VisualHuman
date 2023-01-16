@@ -3,6 +3,12 @@
 import Vue from 'vue'
 import App from './App'
 
+import { Toast } from 'vant';
+
+import {Button} from 'vant'
+Vue.use(Button)
+
+Vue.use(Toast);
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

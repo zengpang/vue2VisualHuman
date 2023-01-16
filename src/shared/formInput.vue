@@ -185,6 +185,30 @@ export default {
             this.rangeShowValue=event.target.value;
             console.log(event.target.value);
         };break;
+        case 'lightPositionInputx':{
+
+        };break;
+        case 'lightPositionInputy':{
+
+        };break;
+        case 'lightPositionInputz':{
+
+        };break;
+        case '_sssVOffsetInput':{
+
+        };break;
+        case '_sssUOffsetInput':{
+
+        };break;
+        case '_roughnessAdjInput':{
+
+        };break;
+        case '_metalAdjInput':{
+
+        };break;
+        case '_skinLightValueInput':{
+          
+        };break;
       }
     },
   },

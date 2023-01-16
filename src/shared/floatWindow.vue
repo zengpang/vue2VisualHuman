@@ -1,11 +1,12 @@
 <template>
-  <div class="floatWindow">
+  <div :class="'floatWindow'+(isHideWindow?' hide':'')">
     <header>
         <textIcon iconType="reset" class="resetBtn" :onClick="resetClick"  />
-        <p class="windowTitle">{{title}}</p>
-        <textIcon iconType="arrow" :onClick="hideBtnClick"  class="icon" />
-        
+        <p class="windowTitle" >{{title}}</p>
+        <textIcon iconType="arrow" :onClick="hideBtnClick"  class="icon"  />
+        <van-toast id="van-toast" />
     </header>
+  
     <tabPageBar >
       <tabPage slot="tabPages" :key="'参数1'" name="参数1">
         <div slot="tabPage" class="tabPageContent">
@@ -128,7 +129,10 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  
+  transition: all .3s;
+}
+.floatWindow.hide{
+  bottom: -20vh;
 }
 .floatWindow header{
   display: flex;
@@ -137,26 +141,37 @@
   justify-content: space-around;
   align-items: center;
 }
-.floatWindow p{
-   width: 100px; 
-}
+
 .floatWindow .windowTitle{
   color: white;
   font-size: 18px;
   margin-bottom: 9px;
   margin-top: 9px;
   font-weight: bold;
-  
+  width: 100px; 
 }
 .floatWindow .icon{
     display: flex;
     flex-direction: row;
     justify-content: end;
+    width: 100px; 
+    transition: all .3s;
 }
-.floatWindow .reset{
+.floatWindow.hide .icon{
+
+  transform: rotate(180deg);
+}
+.loading{
+  width: 50px;
+  height: 50px;
+  z-index: 99;
+}
+.floatWindow .resetBtn{
     display: flex;
     flex-direction: row;
     justify-content: start;
+    width: 100px;
+   
 }
 .floatWindow .tabPageContent{
     display: flex;
@@ -180,6 +195,7 @@ import textIcon from './textIcon.vue';
 import formInput from './formInput.vue';
 import { materialInfo } from '../lib/material';
 import {rgbToHex,hexToRGB} from '../lib/color';
+
 export default {
   name: "floatWindow",
   props:['title'],
@@ -187,12 +203,14 @@ export default {
     tabPageBar,
     tabPage,
     textIcon,
-    formInput
+    formInput,
+    
   },
   data() {
     return {
         matValue:materialInfo,
-        componentTitle:'阴影强度'
+        componentTitle:'阴影强度',
+        isHideWindow:false
     };
   },
   methods: {
@@ -204,16 +222,19 @@ export default {
     hideBtnClick(event)
     {
       console.log("隐藏页面");
+      this.isHideWindow=!this.isHideWindow;
     }
     ,
     resetClick(event)
     {
       console.log("刷新页面");
+      
+      console.log(this.$toast);
     }
   },
  
   mounted(){
-  
+    
     
   }
 };

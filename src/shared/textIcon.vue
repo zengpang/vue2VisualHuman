@@ -1,5 +1,7 @@
 <template>
-  <p :class="'textIcon '+iconType" @click="onClick"></p>
+  <div class="iconContainer">
+    <p :class="'textIcon '+iconType" @click="onClick" :style="iconStyle"></p>
+  </div>
 </template>
 <style>
 @font-face {
@@ -14,7 +16,10 @@
     font-family: "iconfont";
     font-size: 16px;
     color: white;
+    transition: all .3s;
+    
 }
+
 .textIcon.arrow:before{
     content: "\e652";
 } 
@@ -26,7 +31,7 @@
 
 export default {
   name: "textIcon",
-  props: ["iconType","onClick"],
+  props: ["iconType","onClick","iconStyle"],
   data() {
     return {};
   },

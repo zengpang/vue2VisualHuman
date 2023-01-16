@@ -1,4 +1,5 @@
-import * as THREE from 'three';
+
+import { CubeTextureLoader,TextureLoader } from "three";
 import { TGALoader } from "three/examples/jsm/loaders/TGALoader";
 //本地文件读取
 export function loadFile(path)
@@ -23,7 +24,7 @@ export function loadTexture(path,isCube=false,loadSuccess,loadFail)
    let resultTexture=null;
    if(isCube)
    {
-      resultTexture=new THREE.CubeTextureLoader().load(path);
+      resultTexture=new CubeTextureLoader().load(path);
       return resultTexture;
    }
    const type=path.split(".").slice(-1);
@@ -32,7 +33,7 @@ export function loadTexture(path,isCube=false,loadSuccess,loadFail)
    switch(textureType[type])
    {
      case textureType.png:{
-        resultTexture= new THREE.TextureLoader().load(path,loadSuccess,loadFail);
+        resultTexture= new TextureLoader().load(path,loadSuccess,loadFail);
      };break;
      case textureType.tga:{
         resultTexture= new TGALoader().load(path,loadSuccess,loadFail);
