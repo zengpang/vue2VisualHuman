@@ -3,7 +3,7 @@
     <header>
         <textIcon iconType="reset" class="resetBtn" :onClick="resetClick"  />
         <p class="windowTitle" >{{title}}</p>
-        <textIcon iconType="arrow" :onClick="hideBtnClick"  class="icon"  />
+        <textIcon iconType="arrow" :onClick="hideBtnClick" :isClicked="isHideWindow"  class="icon" />
         <van-toast id="van-toast" />
     </header>
   
@@ -157,10 +157,10 @@
     width: 100px; 
     transition: all .3s;
 }
-.floatWindow.hide .icon{
+/* .floatWindow.hide .icon{
 
-  transform: rotate(180deg);
-}
+  transform: rotateZ(180deg);
+} */
 .loading{
   width: 50px;
   height: 50px;

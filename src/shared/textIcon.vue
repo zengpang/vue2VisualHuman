@@ -1,6 +1,6 @@
 <template>
   <div class="iconContainer">
-    <p :class="'textIcon '+iconType" @click="onClick" :style="iconStyle"></p>
+    <p :class="'textIcon '+iconType+(isClicked?' cilcked':'')" @click="onClick" :style="iconStyle"></p>
   </div>
 </template>
 <style>
@@ -19,7 +19,9 @@
     transition: all .3s;
     
 }
-
+.textIcon.cilcked{
+   transform: rotate(180deg);
+}
 .textIcon.arrow:before{
     content: "\e652";
 } 
@@ -31,7 +33,7 @@
 
 export default {
   name: "textIcon",
-  props: ["iconType","onClick","iconStyle"],
+  props: ["iconType","onClick","iconStyle","isClicked"],
   data() {
     return {};
   },
