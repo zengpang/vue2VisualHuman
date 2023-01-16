@@ -205,19 +205,20 @@ export default {
           break;
         case "lightPositionInputx":
           {
-            light.position.set(value, lightPos.value.y, lightPos.value.z);
+            
+            light.position.set(value, lightPos.y, lightPos.z);
             lightPos = light.position;
           }
           break;
         case "lightPositionInputy":
           {
-            light.position.set(lightPos.value.x, value, lightPos.value.z);
+            light.position.set(lightPos.x, value, lightPos.z);
             lightPos = light.position;
           }
           break;
         case "lightPositionInputz":
           {
-            light.position.set(lightPos.value.x, lightPos.value.y, value);
+            light.position.set(lightPos.x, lightPos.y, value);
             lightPos = light.position;
           }
           break;
