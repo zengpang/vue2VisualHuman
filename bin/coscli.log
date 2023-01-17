@@ -1,0 +1,29 @@
+[36mINFO[0m[2023-01-17 11:59:49] Add successfully! name: gathergold-account-1257473511, endpoint: , alias: gathergold-account-1257473511 
+[36mINFO[0m[2023-01-17 12:03:17] Delete succeccfully! name: gathergold-account-1257473511, endpoint: , alias: gathergold-account-1257473511 
+[36mINFO[0m[2023-01-17 12:05:14] Add successfully! name: gathergold-account-1257473511, endpoint: , alias: gathergold-account-1257473511 
+[36mINFO[0m[2023-01-17 12:31:41] Upload /root/repos/virtualhuman/dist/index.html => cos://virtualhuman-1257473511/index.html 
+[36mINFO[0m[2023-01-17 12:31:46] Upload /root/repos/virtualhuman/dist/static/css/app.9d4f105c9225de8fde024ddbe820ada7.css => cos://virtualhuman-1257473511/static/css/app.9d4f105c9225de8fde024ddbe820ada7.css 
+[36mINFO[0m[2023-01-17 12:31:46] Upload /root/repos/virtualhuman/dist/static/css/app.9d4f105c9225de8fde024ddbe820ada7.css.map => cos://virtualhuman-1257473511/static/css/app.9d4f105c9225de8fde024ddbe820ada7.css.map 
+[36mINFO[0m[2023-01-17 12:31:46] Upload /root/repos/virtualhuman/dist/static/js/app.e11324056d86b5afaaef.js => cos://virtualhuman-1257473511/static/js/app.e11324056d86b5afaaef.js 
+[36mINFO[0m[2023-01-17 12:31:47] Upload /root/repos/virtualhuman/dist/static/js/app.e11324056d86b5afaaef.js.map => cos://virtualhuman-1257473511/static/js/app.e11324056d86b5afaaef.js.map 
+[36mINFO[0m[2023-01-17 12:31:47] Upload /root/repos/virtualhuman/dist/static/js/manifest.2ae2e69a05c33dfc65f8.js => cos://virtualhuman-1257473511/static/js/manifest.2ae2e69a05c33dfc65f8.js 
+[36mINFO[0m[2023-01-17 12:31:47] Upload /root/repos/virtualhuman/dist/static/js/manifest.2ae2e69a05c33dfc65f8.js.map => cos://virtualhuman-1257473511/static/js/manifest.2ae2e69a05c33dfc65f8.js.map 
+[36mINFO[0m[2023-01-17 12:31:47] Upload /root/repos/virtualhuman/dist/static/js/vendor.10e42bf5068060fd0fa2.js => cos://virtualhuman-1257473511/static/js/vendor.10e42bf5068060fd0fa2.js 
+[36mINFO[0m[2023-01-17 12:31:47] Upload /root/repos/virtualhuman/dist/static/js/vendor.10e42bf5068060fd0fa2.js.map => cos://virtualhuman-1257473511/static/js/vendor.10e42bf5068060fd0fa2.js.map 
+[36mINFO[0m[2023-01-17 12:31:47] Upload /root/repos/virtualhuman/dist/static/model/Naria.FBX => cos://virtualhuman-1257473511/static/model/Naria.FBX 
+[36mINFO[0m[2023-01-17 12:31:48] Upload /root/repos/virtualhuman/dist/static/model/Naria@idie.FBX => cos://virtualhuman-1257473511/static/model/Naria@idie.FBX 
+[36mINFO[0m[2023-01-17 12:31:48] Upload /root/repos/virtualhuman/dist/static/shader/ChacterBodyShader.frag => cos://virtualhuman-1257473511/static/shader/ChacterBodyShader.frag 
+[36mINFO[0m[2023-01-17 12:31:48] Upload /root/repos/virtualhuman/dist/static/shader/ChacterBodyShader.vert => cos://virtualhuman-1257473511/static/shader/ChacterBodyShader.vert 
+[36mINFO[0m[2023-01-17 12:31:48] Upload /root/repos/virtualhuman/dist/static/shader/ChacterHairShader.frag => cos://virtualhuman-1257473511/static/shader/ChacterHairShader.frag 
+[36mINFO[0m[2023-01-17 12:31:48] Upload /root/repos/virtualhuman/dist/static/shader/ChacterHairShader.vert => cos://virtualhuman-1257473511/static/shader/ChacterHairShader.vert 
+[36mINFO[0m[2023-01-17 12:31:48] Upload /root/repos/virtualhuman/dist/static/texture/Naria/Naria_D_3.tga => cos://virtualhuman-1257473511/static/texture/Naria/Naria_D_3.tga 
+[36mINFO[0m[2023-01-17 12:31:49] Upload /root/repos/virtualhuman/dist/static/texture/Naria/Naria_MCS.tga => cos://virtualhuman-1257473511/static/texture/Naria/Naria_MCS.tga 
+[36mINFO[0m[2023-01-17 12:31:50] Upload /root/repos/virtualhuman/dist/static/texture/Naria/Naria_N.tga => cos://virtualhuman-1257473511/static/texture/Naria/Naria_N.tga 
+[36mINFO[0m[2023-01-17 12:31:51] Upload /root/repos/virtualhuman/dist/static/texture/Naria/_ShiftTexture01.tga => cos://virtualhuman-1257473511/static/texture/Naria/_ShiftTexture01.tga 
+[36mINFO[0m[2023-01-17 12:31:51] Upload /root/repos/virtualhuman/dist/static/texture/Naria/preintegrated_falloff_2D.png => cos://virtualhuman-1257473511/static/texture/Naria/preintegrated_falloff_2D.png 
+[36mINFO[0m[2023-01-17 12:31:51] Upload /root/repos/virtualhuman/dist/static/texture/Naria/pisa/nx.png => cos://virtualhuman-1257473511/static/texture/Naria/pisa/nx.png 
+[36mINFO[0m[2023-01-17 12:31:51] Upload /root/repos/virtualhuman/dist/static/texture/Naria/pisa/ny.png => cos://virtualhuman-1257473511/static/texture/Naria/pisa/ny.png 
+[36mINFO[0m[2023-01-17 12:31:51] Upload /root/repos/virtualhuman/dist/static/texture/Naria/pisa/nz.png => cos://virtualhuman-1257473511/static/texture/Naria/pisa/nz.png 
+[36mINFO[0m[2023-01-17 12:31:51] Upload /root/repos/virtualhuman/dist/static/texture/Naria/pisa/px.png => cos://virtualhuman-1257473511/static/texture/Naria/pisa/px.png 
+[36mINFO[0m[2023-01-17 12:31:51] Upload /root/repos/virtualhuman/dist/static/texture/Naria/pisa/py.png => cos://virtualhuman-1257473511/static/texture/Naria/pisa/py.png 
+[36mINFO[0m[2023-01-17 12:31:51] Upload /root/repos/virtualhuman/dist/static/texture/Naria/pisa/pz.png => cos://virtualhuman-1257473511/static/texture/Naria/pisa/pz.png 

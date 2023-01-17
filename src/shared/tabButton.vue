@@ -15,14 +15,14 @@
   color: white;
   font-family: "SimHei";
   font-weight: 700;
-  font-size: 14px;
+  font-size: 12px;
   transition: all 0.3s;
 }
 .tabButton.show {
   color: black;
   font-family: "SimHei";
   font-weight: 700;
-  font-size: 14px;
+  font-size: 12px;
   height: 83.78%;
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.6);
