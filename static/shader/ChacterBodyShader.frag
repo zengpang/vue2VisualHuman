@@ -153,10 +153,10 @@ vec3 ComputeNormal(vec3 nornal,vec3 viewDir,vec2 uv,sampler2D normalMap)
 void main(){
     
      //vec3 worldNormal=normalize(vec3(modelMatrix*vec4(vNormal,0.)));
-    vec3 worldNormal=normalize(normalMatrix*vNormal);//视图空间下的
-    vec3 worldPosition=(viewMatrix*modelMatrix*vec4(objectPos,1.)).xyz;//获取世界坐标
+    vec3 worldNormal=normalize(normalMatrix*vNormal);//视图空间下的法线坐标
+    vec3 worldPosition=(viewMatrix*modelMatrix*vec4(objectPos,1.)).xyz;//获取视图空间下的物体坐标
     
-     vec3 vDir=normalize(vec3(-7.951022465039643, 50.66599857875026, 84.02389415272548)-worldPosition);
+    vec3 vDir=normalize(vec3(-7.951022465039643, 50.66599857875026, 84.02389415272548)-worldPosition);
     //vec3 vDir=normalize(cameraPosition*normalMatrix-worldPosition);
     vec3 nDir=ComputeNormal(worldNormal,vDir,vUv*tilling,_NormalTex);
     //nDir=worldNormal;
@@ -204,7 +204,6 @@ void main(){
     float shininess=lerp(1.,_specularPow,smoothness);
     float specularPow=shininess*smoothness;
     vec3 phone=vec3(pow(max(0.,rLdotv),specularPow),pow(max(0.,rLdotv),specularPow),pow(max(0.,rLdotv),specularPow));
-    //vec3 bilnphone=vec3(pow(max(0.,NdotH),specularPow),pow(max(0.,NdotH),specularPow),pow(max(0.,NdotH),specularPow));
     specterm=phone;
     vec3 skinspecColor=lerp(specularColor,_skinSpecValue,skinarea);
     vec3 specfinalColor=specterm*skinspecColor*vec3(atten,atten,atten)*_speculaColor.xyz;
@@ -220,8 +219,7 @@ void main(){
     vec3 envColor=cubeMapColor.xyz;
     vec3 envspecular=envColor*specularColor*diffuseColor*_Expose;
     envspecular=saturate(envspecular);
-    //最终颜色
-    // vec3 finalColor=(diffuseCommon*_mainColor);
+
     //最终颜色=直接光漫反射+高光+IBL+间接光镜面反射
     vec3 finalColor=directDiffuse+specfinalColor+envDiffuse*_skinLightValue+envspecular;
     finalColor=finalColor*_mainColor;
