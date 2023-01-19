@@ -1,4 +1,4 @@
-### Vue2虚拟人项目
+## Vue2虚拟人项目
 
 ### 项目代码组成
 Vuejs Component    1032行

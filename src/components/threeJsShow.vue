@@ -207,19 +207,28 @@ export default {
           {
             
             light.position.set(value, lightPos.y, lightPos.z);
+            bodyMat.uniforms.lightPosition.value=new THREE.Vector3(value, lightPos.y, lightPos.z);
+            headerMat.uniforms.lightPosition.value=new THREE.Vector3(value, lightPos.y, lightPos.z);
             lightPos = light.position;
+            
           }
           break;
         case "lightPositionInputy":
           {
             light.position.set(lightPos.x, value, lightPos.z);
+            bodyMat.uniforms.lightPosition.value=new THREE.Vector3(lightPos.x, value, lightPos.z);
+            headerMat.uniforms.lightPosition.value==new THREE.Vector3(lightPos.x, value, lightPos.z);
             lightPos = light.position;
+    
           }
           break;
         case "lightPositionInputz":
           {
             light.position.set(lightPos.x, lightPos.y, value);
+            bodyMat.uniforms.lightPosition.value=new THREE.Vector3(lightPos.x, lightPos.y, value);
+            headerMat.uniforms.lightPosition.value=new THREE.Vector3(lightPos.x, lightPos.y, value);
             lightPos = light.position;
+            
           }
           break;
         case "_HairColorInput":
