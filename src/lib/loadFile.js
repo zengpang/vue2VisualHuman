@@ -1,5 +1,5 @@
 
-import { CubeTextureLoader,TextureLoader } from "three";
+import { CubeTextureLoader,TextureLoader,AnimationMixer } from "three";
 import { TGALoader } from "three/examples/jsm/loaders/TGALoader";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 //本地文件读取
@@ -63,5 +63,6 @@ export function loadModel(modelPath,bodyMat,headerMat,pos)
       })
    })
 }
+
 
 

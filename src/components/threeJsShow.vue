@@ -347,6 +347,7 @@ export default {
       });
       showModel = await loadModel(modelPath, bodyMat, headerMat, [0, -30, 0]);
       scene.add(showModel);
+      this.initModelAnim();
       this.$toast.clear();
     },
     //渲染器初始化
@@ -388,20 +389,21 @@ export default {
       let loader = new FBXLoader();
 
       loader.load(animationPath, function(object) {
+     
         //创建动画混合器，并指定模型，混合器会自动根据指定模型寻找骨骼，并绑定
         let mixer = new THREE.AnimationMixer(showModel);
         //添加至动画混合器数组
         animationMixers.push(mixer);
         //挂载动画
-        console.log(showModel);
         showModel.animations.push(object.animations[0]);
-
+        
         //获取动画片
         let action = mixer.clipAction(showModel.animations[0]);
 
         //播放动画片
         action.play();
       });
+     
     },
 
     render() {
@@ -434,8 +436,7 @@ export default {
       this.initLight();
       this.initPlane();
       this.initModelFbx();
-      this.initControls();
-      this.initModelAnim();
+      this.initControls();   
       this.animate();
       window.onresize = this.onWindowResize;
     }
