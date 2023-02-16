@@ -111,7 +111,7 @@ float lerp(float a,float b,float w)
     return a+w*(b-a);
     
 }
-//
+//线性插值运算，运算公式为形参b与a的差乘上形参w，最后再加上形参a
 vec3 lerp(vec3 a,vec3 b,float w)
 {
     return a+w*(b-a);
@@ -123,14 +123,17 @@ vec3 lerp(vec3 a,float b,float w)
     
 }
 mat3 cotangent_frame(vec3 N,vec3 p,vec2 uv)
-{
-   
+{ 
+    //偏导数函数（HLSL中的ddx和ddy，GLSL中的dFdx和dFdy）是片元着色器中的一个用于计算任何变量基于屏幕空间坐标的变化率的指令（函数）。
+    //dp1为以像素块为单位计算视角向量基于屏幕空间坐标的变化率
     vec3 dp1=dFdx(p);
+    //dp2为以像素块为单位计算视角向量基于屏幕空间坐标的变化率
     vec3 dp2=dFdy(p);
+    //duv1为以像素块为单位计算法线UV基于屏幕空间坐标的变化率
     vec2 duv1=dFdx(uv);
+    //duv2为以像素块为单位计算法线UV基于屏幕空间坐标的变化率
     vec2 duv2=dFdy(uv);
-    
-    
+
     vec3 dp2perp=cross(dp2,N);
     vec3 dp1perp=cross(N,dp1);
     vec3 T=dp2perp*duv1.x+dp1perp*duv2.x;
@@ -143,7 +146,7 @@ mat3 cotangent_frame(vec3 N,vec3 p,vec2 uv)
 //法线计算
 vec3 ComputeNormal(vec3 nornal,vec3 viewDir,vec2 uv,sampler2D normalMap)
 {
- 
+    //法线贴图采样
     vec3 map=texture2D(normalMap,uv).xyz;
     
     map=map*255./127.-128./127.;
@@ -182,11 +185,11 @@ void main(){
     vec3 mainTex=texture2D(_MainTex,vUv).xyz;
     //组合贴图
     vec4 compMaskTex=texture2D(_CompMaskTex,vUv);
-    /*基础颜色*/
+    /*贴图颜色*/
     vec3 albedoColor=pow(mainTex,vec3(2.2,2.2,2.2));
     //金属度获取
     float metal=saturate(compMaskTex.g+_metalAdj);
-    //
+    //基础颜色
     vec3 baseColor= albedoColor.xyz*(1.0-metal);
     /*阴影*/
     vec3 shadowColorFactor=vec3(1.0,1.0,1.0);
@@ -208,15 +211,21 @@ void main(){
     vec3 directDiffuse=lerp(diffuseCommon,sssDiffuse,skinarea);
     directDiffuse=saturate(directDiffuse);
     /*高光*/
+    //粗糙度
     float roughness=saturate(compMaskTex.r+_roughnessAdj);
     vec3 specterm=vec3(1.,1.,1.);
+    //高光颜色
     vec3 specularColor=lerp(.04,albedoColor.rgb,metal);
+    //光滑度
     float smoothness=1.-roughness;
+    //高光值=手动调整的高光次幂值与整数1以光滑度为插值进行线性插值运算
     float shininess=lerp(1.,_specularPow,smoothness);
+    //高光次幂值
     float specularPow=shininess*smoothness;
-    //phone高光公式=光照反射向量
+    //phone高光公式=光照反射向量与视角向量的进行点乘，得出的结果进行
     vec3 phone=vec3(pow(max(0.,rLdotv),specularPow),pow(max(0.,rLdotv),specularPow),pow(max(0.,rLdotv),specularPow));
     specterm=phone;
+    //皮肤高光颜色
     vec3 skinspecColor=lerp(specularColor,_skinSpecValue,skinarea);
     vec3 specfinalColor=specterm*skinspecColor*vec3(atten,atten,atten)*_speculaColor.xyz;
     specfinalColor=saturate(specfinalColor);
