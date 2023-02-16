@@ -125,21 +125,24 @@ vec3 lerp(vec3 a,float b,float w)
 mat3 cotangent_frame(vec3 N,vec3 p,vec2 uv)
 { 
     //偏导数函数（HLSL中的ddx和ddy，GLSL中的dFdx和dFdy）是片元着色器中的一个用于计算任何变量基于屏幕空间坐标的变化率的指令（函数）。
-    //dp1为以像素块为单位计算视角向量基于屏幕空间坐标的变化率
+    //dp1为在X轴上以像素块为单位计算视角向量基于屏幕空间坐标的变化率
     vec3 dp1=dFdx(p);
-    //dp2为以像素块为单位计算视角向量基于屏幕空间坐标的变化率
+    //dp2为在Y轴上以像素块为单位计算视角向量基于屏幕空间坐标的变化率
     vec3 dp2=dFdy(p);
-    //duv1为以像素块为单位计算法线UV基于屏幕空间坐标的变化率
+    //duv1为在X轴上以像素块为单位计算法线UV基于屏幕空间坐标的变化率
     vec2 duv1=dFdx(uv);
-    //duv2为以像素块为单位计算法线UV基于屏幕空间坐标的变化率
+    //duv2为在Y轴上以像素块为单位计算法线UV基于屏幕空间坐标的变化率
     vec2 duv2=dFdy(uv);
 
+    //使用叉乘求出与dp2，模型法线向量垂直的向量dp2perp
     vec3 dp2perp=cross(dp2,N);
+    //使用叉乘求出与模型法线向量，dp1垂直的向量dp1perp
     vec3 dp1perp=cross(N,dp1);
+    //dp2perp乘以duv1
     vec3 T=dp2perp*duv1.x+dp1perp*duv2.x;
     vec3 B=dp2perp*duv1.y+dp1perp*duv2.y;
     
-   
+    //T与T值进行点乘，
     float invmax=inversesqrt(max(dot(T,T),dot(B,B)));
     return mat3(T*invmax,B*invmax,N);
 }
@@ -148,7 +151,7 @@ vec3 ComputeNormal(vec3 nornal,vec3 viewDir,vec2 uv,sampler2D normalMap)
 {
     //法线贴图采样
     vec3 map=texture2D(normalMap,uv).xyz;
-    
+    //将法线贴图减去0.5再乘以2，以此还原法线贴图中存储在切线空间下的法线向量信息
     map=map*255./127.-128./127.;
     
     mat3 TBN=cotangent_frame(nornal,-viewDir,uv);
@@ -183,7 +186,7 @@ void main(){
     float NdotH=dot(nDir,hDir);
     //基础贴图采样
     vec3 mainTex=texture2D(_MainTex,vUv).xyz;
-    //组合贴图
+    //组合贴图(r通道为金属度，g通道为光滑度)
     vec4 compMaskTex=texture2D(_CompMaskTex,vUv);
     /*贴图颜色*/
     vec3 albedoColor=pow(mainTex,vec3(2.2,2.2,2.2));
@@ -222,7 +225,7 @@ void main(){
     float shininess=lerp(1.,_specularPow,smoothness);
     //高光次幂值
     float specularPow=shininess*smoothness;
-    //phone高光公式=光照反射向量与视角向量的进行点乘，得出的结果进行
+    //phone高光公式=光照反射向量与视角向量的进行点乘，得出的结果进行次幂运算
     vec3 phone=vec3(pow(max(0.,rLdotv),specularPow),pow(max(0.,rLdotv),specularPow),pow(max(0.,rLdotv),specularPow));
     specterm=phone;
     //皮肤高光颜色
@@ -236,6 +239,7 @@ void main(){
     /*间接光镜面反射*/
     roughness=roughness*(1.7-.7*roughness);
     float mip_level=roughness*6.;
+    //
     vec4 cubeMapColor=textureCube(_cubeMap,rvDir,mip_level);
     vec3 envColor=cubeMapColor.xyz;
     vec3 envspecular=envColor*specularColor*diffuseColor*_Expose;

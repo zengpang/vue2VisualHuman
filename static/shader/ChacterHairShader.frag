@@ -152,6 +152,7 @@ void main(){
     nDir=normalize(nDir);
     vec3 lDir=normalize(lightPosition-worldPosition);
     //向量操作
+    //半角向量为光线线路与视角线路的和
     vec3 hDir=normalize(lDir+vDir);
     vec3 rLDir=normalize(reflect(-lDir,nDir));
     vec3 rvDir=reflect(-vDir,nDir);
@@ -195,6 +196,7 @@ void main(){
     vec3 anisoOffset1=nDir*(anisoNoise*_specNoise1+_specOffset1);
     vec3 btDir1=normalize(btDir+anisoOffset1);
     float bdotH1=dot(hDir,btDir1)/_specShininess1;
+    //ward各向异性高光简易版=切线向量与半角向量
     float specTerm1_float=exp(-(TdotH*TdotH+bdotH1*bdotH1)/(1.+NdotH));
     vec3 specTerm1=vec3(specTerm1_float,specTerm1_float,specTerm1_float);
     vec3 finalSpec1=specTerm1*anisonAtten*specColor1;
