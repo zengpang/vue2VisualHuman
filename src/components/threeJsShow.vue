@@ -41,6 +41,7 @@ let lightPos = null;
 let render = null;
 //用户交互插件
 let controls = null;
+
 //模型路径
 const modelPath = "static/model/Naria.FBX";
 //模型材质
@@ -127,7 +128,7 @@ export default {
             isLoading = false;
           }
         }
-
+        
         resolve({
           mainTexture,
           compMaskTex,

@@ -111,6 +111,7 @@ float lerp(float a,float b,float w)
     return a+w*(b-a);
     
 }
+//
 vec3 lerp(vec3 a,vec3 b,float w)
 {
     return a+w*(b-a);
@@ -139,6 +140,7 @@ mat3 cotangent_frame(vec3 N,vec3 p,vec2 uv)
     float invmax=inversesqrt(max(dot(T,T),dot(B,B)));
     return mat3(T*invmax,B*invmax,N);
 }
+//法线计算
 vec3 ComputeNormal(vec3 nornal,vec3 viewDir,vec2 uv,sampler2D normalMap)
 {
  
@@ -160,22 +162,31 @@ void main(){
     //vec3 vDir=normalize(cameraPosition*normalMatrix-worldPosition);
     vec3 nDir=ComputeNormal(worldNormal,vDir,vUv*tilling,_NormalTex);
     //nDir=worldNormal;
+    //光线向量=光的位置减去模型世界坐标
     vec3 lDir=normalize(lightPosition-worldPosition);
-    //向量操作
+    //半角向量
     vec3 hDir=normalize(lDir+vDir);
+    //光线反射向量
     vec3 rLDir=normalize(reflect(-lDir,nDir));
+    //视角反射向量
     vec3 rvDir=normalize(reflect(-vDir,nDir));
+    //视角向量与法线向量点乘
     float NdotV=dot(nDir,vDir);
+    //视角向量与光照向量点乘
     float NdotL=dot(nDir,lDir);
+    //光线反射向量与视角向量点乘
     float rLdotv=dot(rLDir,vDir);
+    //法线向量与半角向量点乘
     float NdotH=dot(nDir,hDir);
-    //贴图操作
+    //基础贴图采样
     vec3 mainTex=texture2D(_MainTex,vUv).xyz;
+    //组合贴图
     vec4 compMaskTex=texture2D(_CompMaskTex,vUv);
     /*基础颜色*/
     vec3 albedoColor=pow(mainTex,vec3(2.2,2.2,2.2));
-
+    //金属度获取
     float metal=saturate(compMaskTex.g+_metalAdj);
+    //
     vec3 baseColor= albedoColor.xyz*(1.0-metal);
     /*阴影*/
     vec3 shadowColorFactor=vec3(1.0,1.0,1.0);
@@ -203,6 +214,7 @@ void main(){
     float smoothness=1.-roughness;
     float shininess=lerp(1.,_specularPow,smoothness);
     float specularPow=shininess*smoothness;
+    //phone高光公式=光照反射向量
     vec3 phone=vec3(pow(max(0.,rLdotv),specularPow),pow(max(0.,rLdotv),specularPow),pow(max(0.,rLdotv),specularPow));
     specterm=phone;
     vec3 skinspecColor=lerp(specularColor,_skinSpecValue,skinarea);
